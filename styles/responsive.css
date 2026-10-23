@@ -1,0 +1,96 @@
+/* ============================================================
+   Aonzik Blog — Responsive
+   ============================================================ */
+
+/* ---- 大屏缩进 -------------------------------------------- */
+@media (min-width: 1440px) {
+  :root { --gutter: 3rem; }
+}
+
+/* ---- 平板 ------------------------------------------------ */
+@media (max-width: 1024px) {
+  :root { --sp-9: 5rem; --sp-10: 6rem; }
+
+  .posts-grid { grid-template-columns: repeat(2, 1fr); }
+
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--sp-6);
+  }
+
+  .footer-brand { grid-column: 1 / -1; }
+}
+
+/* ---- 移动端 ---------------------------------------------- */
+@media (max-width: 768px) {
+  :root {
+    --gutter: 1.25rem;
+    --sp-9: 3.5rem;
+    --sp-10: 4.5rem;
+    --fs-base: 1rem;
+  }
+
+  /* 导航：隐藏链接，显示汉堡 */
+  .nav-links { display: none; }
+  .btn-menu { display: flex; }
+
+  /* Hero */
+  .hero { padding-block: var(--sp-8); }
+  .hero-title { font-size: clamp(2.2rem, 11vw, 3.2rem); }
+  .hero-desc { font-size: var(--fs-base); }
+
+  /* 网格单列 */
+  .posts-grid,
+  .posts-grid--2col { grid-template-columns: 1fr; }
+
+  /* 精选卡片改回纵向 */
+  .card-featured { flex-direction: column; }
+  .card-featured .card-cover { width: 100%; aspect-ratio: 16 / 9; }
+  .card-featured .card-body { padding: var(--sp-5); }
+
+  /* 页脚单列 */
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: var(--sp-5);
+  }
+
+  /* 作者卡片纵向 */
+  .author-card { flex-direction: column; align-items: center; text-align: center; }
+  .author-links { justify-content: center; }
+
+  /* 文章 meta 换行 */
+  .post-meta-row { gap: var(--sp-3); }
+
+  /* 返回顶部位置 */
+  .back-to-top {
+    bottom: var(--sp-4);
+    right: var(--sp-4);
+  }
+
+  /* 时间轴间距收紧 */
+  .timeline { padding-left: var(--sp-6); }
+
+  /* 搜索框 */
+  .search-overlay { padding-top: 8vh; }
+  .search-input { font-size: var(--fs-base); }
+
+  /* 正文字号略降 */
+  .prose { font-size: var(--fs-base); line-height: 1.8; }
+  .prose h2 { font-size: var(--fs-lg); }
+  .prose h3 { font-size: var(--fs-md); }
+}
+
+/* ---- 超小屏 ---------------------------------------------- */
+@media (max-width: 380px) {
+  .hero-title { font-size: 2rem; }
+  .nav-brand-name { font-size: var(--fs-base); }
+}
+
+/* ---- 打印 ------------------------------------------------ */
+@media print {
+  .site-nav, .site-footer, .back-to-top, .read-progress,
+  .search-overlay, .btn-menu, .nav-drawer { display: none !important; }
+  body::before { display: none; }
+  body { background: #fff; color: #000; }
+  .card, .prose pre { break-inside: avoid; }
+}

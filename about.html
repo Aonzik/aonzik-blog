@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>关于 — Aonzik</title>
+  <meta name="description" content="关于这个博客，以及写这些字的人。" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600&family=Inter:wght@400;450;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles/tokens.css" />
+  <link rel="stylesheet" href="styles/base.css" />
+  <link rel="stylesheet" href="styles/components.css" />
+  <link rel="stylesheet" href="styles/responsive.css" />
+  <style>
+    /* 关于页：简介 + 侧栏 */
+    .about-hero {
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: var(--sp-8);
+      align-items: start;
+      padding-block: var(--sp-8);
+    }
+    @media (max-width: 900px) {
+      .about-hero { grid-template-columns: 1fr; }
+    }
+
+    .about-lead {
+      font-family: var(--font-serif);
+      font-size: clamp(1.4rem, 2.6vw, 2rem);
+      line-height: 1.5;
+      color: var(--ink);
+      letter-spacing: -0.015em;
+    }
+    .about-lead em {
+      font-style: normal;
+      color: var(--accent);
+    }
+
+    .about-body {
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-4);
+      margin-top: var(--sp-5);
+      font-size: var(--fs-base);
+      color: var(--ink-soft);
+      line-height: 1.8;
+      max-width: 58ch;
+    }
+
+    /* 两栏：时间轴 + 技能 */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: var(--sp-8);
+      align-items: start;
+    }
+    @media (max-width: 860px) {
+      .about-grid { grid-template-columns: 1fr; gap: var(--sp-7); }
+    }
+
+    /* 精选作品 / 项目 */
+    .project-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--sp-4);
+    }
+    @media (max-width: 700px) { .project-grid { grid-template-columns: 1fr; } }
+
+    .project-card {
+      padding: var(--sp-5);
+      border: 1px solid var(--rule);
+      border-radius: 2px;
+      background: var(--paper-raised);
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-2);
+      transition: border-color var(--dur) var(--ease),
+                  box-shadow var(--dur) var(--ease),
+                  transform var(--dur) var(--ease);
+      text-decoration: none;
+    }
+    .project-card:hover {
+      border-color: var(--rule-strong);
+      box-shadow: var(--shadow-sm);
+      transform: translateY(-2px);
+    }
+    .project-name {
+      font-family: var(--font-serif);
+      font-size: var(--fs-md);
+      color: var(--ink);
+    }
+    .project-desc {
+      font-size: var(--fs-sm);
+      color: var(--ink-soft);
+      line-height: 1.6;
+    }
+    .project-meta {
+      margin-top: var(--sp-2);
+      font-size: var(--fs-xs);
+      font-family: var(--font-mono);
+      color: var(--ink-faint);
+      letter-spacing: 0.06em;
+    }
+
+    /* 侧栏名片 */
+    .profile-card {
+      position: sticky;
+      top: 5.5rem;
+      border: 1px solid var(--rule);
+      border-radius: 2px;
+      background: var(--paper-raised);
+      padding: var(--sp-6);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--sp-3);
+      text-align: center;
+    }
+    .profile-avatar {
+      width: 7rem;
+      height: 7rem;
+      border-radius: 50%;
+      background: var(--paper-sunken);
+      border: 2px solid var(--rule);
+      display: grid;
+      place-items: center;
+      font-family: var(--font-serif);
+      font-size: var(--fs-2xl);
+      color: var(--ink-faint);
+    }
+    .profile-name {
+      font-family: var(--font-serif);
+      font-size: var(--fs-md);
+      color: var(--ink);
+    }
+    .profile-role {
+      font-size: var(--fs-xs);
+      font-family: var(--font-mono);
+      color: var(--accent);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    .profile-facts {
+      width: 100%;
+      margin-top: var(--sp-3);
+      padding-top: var(--sp-4);
+      border-top: 1px solid var(--rule);
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-2);
+    }
+    .profile-fact {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font-size: var(--fs-sm);
+      gap: var(--sp-3);
+    }
+    .profile-fact dt { color: var(--ink-faint); }
+    .profile-fact dd { color: var(--ink); margin: 0; font-family: var(--font-mono); font-size: var(--fs-xs); }
+
+    /* 联系方式按钮组 */
+    .contact-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--sp-3);
+      margin-top: var(--sp-5);
+    }
+  </style>
+</head>
+<body>
+
+<!-- ===================== 导航 ===================== -->
+<nav class="site-nav" aria-label="主导航">
+  <div class="container">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-brand" aria-label="Aonzik 首页">
+        <span class="nav-brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 16 16"><path d="M3 12 L8 2 L13 12 M5.5 8 H10.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+        </span>
+        <span class="nav-brand-name">Aonzik</span>
+      </a>
+      <ul class="nav-links" role="list">
+        <li><a href="index.html">首页</a></li>
+        <li><a href="blog.html">文章</a></li>
+        <li><a href="about.html" class="is-active">关于</a></li>
+      </ul>
+      <div class="nav-actions">
+        <button class="btn-theme" aria-label="切换颜色主题">
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+        <button class="btn-ghost btn" data-search-open aria-label="搜索">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+          搜索
+        </button>
+        <button class="btn-menu" aria-label="打开菜单" aria-expanded="false" aria-controls="nav-drawer-about">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="nav-drawer" id="nav-drawer-about" role="navigation">
+    <a href="index.html">首页</a>
+    <a href="blog.html">文章</a>
+    <a href="about.html" class="is-active">关于</a>
+  </div>
+</nav>
+
+<main>
+  <!-- ===================== 简介 ===================== -->
+  <div class="container">
+    <div class="about-hero">
+      <div>
+        <p class="eyebrow" style="margin-bottom:var(--sp-4)">关于</p>
+        <p class="about-lead" data-reveal>
+          你好，我是 Aonzik。<br>
+          一个写代码的人，也<em>写字</em>。
+        </p>
+
+        <div class="about-body" data-reveal style="--reveal-delay:100ms">
+          <p>
+            这个博客建于 2025 年，最初只是想给那些散落的笔记找一个归宿。
+            后来才慢慢发现，整理本身就是一种思考方式——把想法写下来的时候，
+            很多含糊的地方会被迫变得清楚。
+          </p>
+          <p>
+            我关注设计、技术与生活的交叉地带。技术让人有能力去做事，
+            设计决定这件事做出来好不好用，而生活决定这件事值不值得做。
+            三者缺一不可。
+          </p>
+          <p>
+            这里的内容没有固定的更新频率，也不追热点。
+            通常是有了一些想清楚的东西，才会动笔。
+          </p>
+        </div>
+
+        <div class="contact-row" data-reveal style="--reveal-delay:200ms">
+          <a href="mailto:hi@aonzik.com" class="btn btn-primary">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 6l-10 7L2 6"/></svg>
+            写邮件
+          </a>
+          <a href="#" class="btn btn-ghost">GitHub</a>
+          <a href="#" class="btn btn-ghost">RSS 订阅</a>
+        </div>
+      </div>
+
+      <!-- 侧栏名片 -->
+      <aside class="profile-card" data-reveal style="--reveal-delay:150ms">
+        <div class="profile-avatar" aria-hidden="true">A</div>
+        <p class="profile-name">Aonzik</p>
+        <p class="profile-role">Developer / Writer</p>
+
+        <dl class="profile-facts">
+          <div class="profile-fact">
+            <dt>所在地</dt>
+            <dd>占位城市</dd>
+          </div>
+          <div class="profile-fact">
+            <dt>建站</dt>
+            <dd>2025</dd>
+          </div>
+          <div class="profile-fact">
+            <dt>文章</dt>
+            <dd>12 篇</dd>
+          </div>
+          <div class="profile-fact">
+            <dt>状态</dt>
+            <dd>持续更新</dd>
+          </div>
+        </dl>
+      </aside>
+    </div>
+  </div>
+
+  <!-- ===================== 经历 + 技能 ===================== -->
+  <section class="section section--tight">
+    <div class="container">
+      <div class="about-grid">
+
+        <!-- 时间轴 -->
+        <div>
+          <div class="section-head">
+            <h2>经历</h2>
+          </div>
+          <div class="timeline" data-reveal>
+            <div class="timeline-item">
+              <span class="timeline-year">2025</span>
+              <p class="timeline-title">开始写这个博客</p>
+              <p class="timeline-desc">占位描述。这里是经历的说明文字，可以写做了什么、学到了什么。</p>
+            </div>
+            <div class="timeline-item">
+              <span class="timeline-year">2024</span>
+              <p class="timeline-title">某个项目或阶段</p>
+              <p class="timeline-desc">占位描述。这里是经历的说明文字，后续替换为真实内容。</p>
+            </div>
+            <div class="timeline-item">
+              <span class="timeline-year">2023</span>
+              <p class="timeline-title">另一个里程碑</p>
+              <p class="timeline-desc">占位描述。这里是经历的说明文字，后续替换为真实内容。</p>
+            </div>
+            <div class="timeline-item">
+              <span class="timeline-year">2022</span>
+              <p class="timeline-title">起点</p>
+              <p class="timeline-desc">占位描述。这里是经历的说明文字，后续替换为真实内容。</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 技能 -->
+        <div>
+          <div class="section-head">
+            <h2>在做的事</h2>
+          </div>
+          <div class="skill-list" data-reveal>
+            <div class="skill-item">
+              <div class="skill-header">
+                <span class="skill-name">前端开发</span>
+                <span class="skill-pct">占位 90%</span>
+              </div>
+              <div class="skill-track"><div class="skill-bar" data-pct="90"></div></div>
+            </div>
+            <div class="skill-item">
+              <div class="skill-header">
+                <span class="skill-name">界面设计</span>
+                <span class="skill-pct">占位 75%</span>
+              </div>
+              <div class="skill-track"><div class="skill-bar" data-pct="75"></div></div>
+            </div>
+            <div class="skill-item">
+              <div class="skill-header">
+                <span class="skill-name">技术写作</span>
+                <span class="skill-pct">占位 80%</span>
+              </div>
+              <div class="skill-track"><div class="skill-bar" data-pct="80"></div></div>
+            </div>
+            <div class="skill-item">
+              <div class="skill-header">
+                <span class="skill-name">摄影</span>
+                <span class="skill-pct">占位 60%</span>
+              </div>
+              <div class="skill-track"><div class="skill-bar" data-pct="60"></div></div>
+            </div>
+          </div>
+
+          <!-- 标签 -->
+          <div class="section-head" style="margin-top:var(--sp-7)">
+            <h2>关键词</h2>
+          </div>
+          <ul class="tag-list" data-reveal>
+            <li><a href="blog.html" class="tag">占位词一</a></li>
+            <li><a href="blog.html" class="tag">占位词二</a></li>
+            <li><a href="blog.html" class="tag">占位词三</a></li>
+            <li><a href="blog.html" class="tag">占位词四</a></li>
+            <li><a href="blog.html" class="tag">占位词五</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 项目 ===================== -->
+  <section class="section section--tight">
+    <div class="container">
+      <div class="section-head">
+        <h2>做过的东西</h2>
+      </div>
+      <div class="project-grid">
+        <a href="#" class="project-card" data-reveal>
+          <p class="project-name">项目名称占位</p>
+          <p class="project-desc">一句话描述这个项目做了什么，解决了什么问题。后续补充真实内容。</p>
+          <p class="project-meta">2025 · 占位标签</p>
+        </a>
+        <a href="#" class="project-card" data-reveal>
+          <p class="project-name">项目名称占位</p>
+          <p class="project-desc">一句话描述这个项目做了什么，解决了什么问题。后续补充真实内容。</p>
+          <p class="project-meta">2024 · 占位标签</p>
+        </a>
+        <a href="#" class="project-card" data-reveal>
+          <p class="project-name">项目名称占位</p>
+          <p class="project-desc">一句话描述这个项目做了什么，解决了什么问题。后续补充真实内容。</p>
+          <p class="project-meta">2024 · 占位标签</p>
+        </a>
+        <a href="#" class="project-card" data-reveal>
+          <p class="project-name">项目名称占位</p>
+          <p class="project-desc">一句话描述这个项目做了什么，解决了什么问题。后续补充真实内容。</p>
+          <p class="project-meta">2023 · 占位标签</p>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 收尾 ===================== -->
+  <section class="section section--tight">
+    <div class="container">
+      <div class="author-card" style="flex-direction:column;align-items:flex-start;gap:var(--sp-4)" data-reveal>
+        <p class="eyebrow">保持联系</p>
+        <p style="font-family:var(--font-serif);font-size:var(--fs-lg);line-height:1.4;max-width:30ch;color:var(--ink)">
+          如果这里的内容对你有用，欢迎写信聊聊。
+        </p>
+        <a href="mailto:hi@aonzik.com" class="btn btn-primary" style="margin-top:var(--sp-2)">
+          发送邮件
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ===================== 页脚 ===================== -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="nav-brand">
+          <span class="nav-brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 16 16"><path d="M3 12 L8 2 L13 12 M5.5 8 H10.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+          </span>
+          <span class="nav-brand-name">Aonzik</span>
+        </a>
+        <p class="footer-tagline">记录思考、技术与生活，文字是留存时光的方式。</p>
+      </div>
+      <div>
+        <p class="footer-col-title">导航</p>
+        <ul class="footer-links" role="list">
+          <li><a href="index.html">首页</a></li>
+          <li><a href="blog.html">文章</a></li>
+          <li><a href="about.html">关于</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="footer-col-title">分类</p>
+        <ul class="footer-links" role="list">
+          <li><a href="blog.html">技术</a></li>
+          <li><a href="blog.html">随笔</a></li>
+          <li><a href="blog.html">阅读</a></li>
+          <li><a href="blog.html">设计</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="footer-col-title">联系</p>
+        <ul class="footer-links" role="list">
+          <li><a href="#">GitHub</a></li>
+          <li><a href="#">Twitter / X</a></li>
+          <li><a href="#">RSS 订阅</a></li>
+          <li><a href="mailto:hi@aonzik.com">邮件</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="footer-copy">© 2025 Aonzik. 内容遵循 CC BY 4.0 协议。</p>
+      <div class="footer-social">
+        <a href="#" aria-label="GitHub">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0 0 22 12.017C22 6.484 17.522 2 12 2z"/></svg>
+        </a>
+        <a href="#" aria-label="RSS">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19.01 7.38 20 6.18 20C4.98 20 4 19.01 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1z"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<button class="back-to-top" aria-label="返回顶部">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg>
+</button>
+
+<div class="search-overlay" role="dialog" aria-modal="true" aria-label="搜索">
+  <div class="search-box">
+    <div class="search-input-wrap">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      <input class="search-input" type="search" placeholder="搜索文章…" aria-label="搜索文章" autocomplete="off" spellcheck="false" />
+      <button class="search-close" aria-label="关闭搜索">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <p class="search-hint">按 <kbd>Esc</kbd> 关闭 · <kbd>⌘K</kbd> 快速打开</p>
+  </div>
+</div>
+
+<script src="scripts/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aonzik — 个人博客</title>
+  <meta name="description" content="记录思考、技术与生活的个人博客。" />
+
+  <!-- 字体：中文衬线 + Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600&family=Inter:wght@400;450;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="styles/tokens.css" />
+  <link rel="stylesheet" href="styles/base.css" />
+  <link rel="stylesheet" href="styles/components.css" />
+  <link rel="stylesheet" href="styles/responsive.css" />
+</head>
+<body>
+
+<!-- 阅读进度（首页不显示，post.html 里才启用） -->
+
+<!-- ===================== 导航 ===================== -->
+<nav class="site-nav" aria-label="主导航">
+  <div class="container">
+    <div class="nav-inner">
+      <!-- 品牌 -->
+      <a href="index.html" class="nav-brand" aria-label="Aonzik 首页">
+        <span class="nav-brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 16 16"><path d="M3 12 L8 2 L13 12 M5.5 8 H10.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+        </span>
+        <span class="nav-brand-name">Aonzik</span>
+      </a>
+
+      <!-- 桌面链接 -->
+      <ul class="nav-links" role="list">
+        <li><a href="index.html" class="is-active">首页</a></li>
+        <li><a href="blog.html">文章</a></li>
+        <li><a href="about.html">关于</a></li>
+      </ul>
+
+      <!-- 右侧操作 -->
+      <div class="nav-actions">
+        <button class="btn-theme" aria-label="切换颜色主题" title="切换颜色主题">
+          <!-- 太阳 -->
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+          </svg>
+          <!-- 月亮 -->
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        </button>
+        <button class="btn-ghost btn" data-search-open aria-label="搜索" title="搜索 (⌘K)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+          </svg>
+          搜索
+        </button>
+        <button class="btn-menu" aria-label="打开菜单" aria-expanded="false" aria-controls="nav-drawer">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </div>
+  <!-- 移动端抽屉 -->
+  <div class="nav-drawer" id="nav-drawer" role="navigation">
+    <a href="index.html" class="is-active">首页</a>
+    <a href="blog.html">文章</a>
+    <a href="about.html">关于</a>
+  </div>
+</nav>
+
+<!-- ===================== Hero ===================== -->
+<header class="hero">
+  <div class="container">
+    <div class="hero-inner">
+      <span class="hero-tag" data-reveal>个人博客 · 持续更新中</span>
+      <h1 class="hero-title" data-reveal style="--reveal-delay:80ms">
+        写下<em>思考</em>，<br>留住此刻。
+      </h1>
+      <p class="hero-desc" data-reveal style="--reveal-delay:160ms">
+        这里记录技术探索、阅读笔记与日常感悟。<br>
+        内容持续更新，欢迎常来看看。
+      </p>
+      <div class="hero-cta" data-reveal style="--reveal-delay:240ms">
+        <a href="blog.html" class="btn btn-primary">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          浏览文章
+        </a>
+        <a href="about.html" class="btn btn-ghost">了解我</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ===================== 精选文章 ===================== -->
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <h2>精选</h2>
+      <a href="blog.html" class="eyebrow link-underline">全部文章 →</a>
+    </div>
+
+    <!-- 精选大卡 -->
+    <a href="post.html" class="card card-featured" data-reveal>
+      <div class="card-cover">
+        <div class="card-cover-placeholder">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+            <rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/>
+          </svg>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-meta">
+          <span class="card-cat">技术</span>
+          <span class="card-date">2025-10-01</span>
+        </div>
+        <h3 class="card-title">文章标题占位：这里将放置一篇精选长文的标题</h3>
+        <p class="card-excerpt">
+          这里是文章摘要占位文字。简洁地描述文章的核心观点，
+          让读者快速判断是否值得深入阅读。内容后续填充。
+        </p>
+        <div class="card-footer">
+          <span class="card-read">约 8 分钟阅读</span>
+          <span class="card-arrow">阅读全文 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+        </div>
+      </div>
+    </a>
+  </div>
+</section>
+
+<!-- ===================== 最新文章 ===================== -->
+<section class="section section--tight">
+  <div class="container">
+    <div class="section-head">
+      <h2>最新</h2>
+      <a href="blog.html" class="eyebrow link-underline">更多 →</a>
+    </div>
+
+    <div class="posts-grid">
+      <!-- 卡片 × 3，内容占位 -->
+      <a href="post.html" class="card" data-reveal>
+        <div class="card-cover">
+          <div class="card-cover-placeholder">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-meta">
+            <span class="card-cat">随笔</span>
+            <span class="card-date">2025-09-18</span>
+          </div>
+          <h3 class="card-title">文章标题占位：第二篇</h3>
+          <p class="card-excerpt">摘要占位文字，简述本文的核心内容。后续补充实际内容。</p>
+          <div class="card-footer">
+            <span class="card-read">约 5 分钟</span>
+            <span class="card-arrow">阅读 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+          </div>
+        </div>
+      </a>
+
+      <a href="post.html" class="card" data-reveal>
+        <div class="card-cover">
+          <div class="card-cover-placeholder">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-meta">
+            <span class="card-cat">阅读</span>
+            <span class="card-date">2025-09-05</span>
+          </div>
+          <h3 class="card-title">文章标题占位：第三篇</h3>
+          <p class="card-excerpt">摘要占位文字，简述本文的核心内容。后续补充实际内容。</p>
+          <div class="card-footer">
+            <span class="card-read">约 6 分钟</span>
+            <span class="card-arrow">阅读 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+          </div>
+        </div>
+      </a>
+
+      <a href="post.html" class="card" data-reveal>
+        <div class="card-cover">
+          <div class="card-cover-placeholder">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-meta">
+            <span class="card-cat">技术</span>
+            <span class="card-date">2025-08-22</span>
+          </div>
+          <h3 class="card-title">文章标题占位：第四篇</h3>
+          <p class="card-excerpt">摘要占位文字，简述本文的核心内容。后续补充实际内容。</p>
+          <div class="card-footer">
+            <span class="card-read">约 4 分钟</span>
+            <span class="card-arrow">阅读 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 标签云 ===================== -->
+<section class="section section--tight">
+  <div class="container">
+    <div class="section-head">
+      <h2>话题</h2>
+    </div>
+    <ul class="tag-list" role="list" data-reveal>
+      <li><a href="blog.html" class="tag">技术</a></li>
+      <li><a href="blog.html" class="tag">随笔</a></li>
+      <li><a href="blog.html" class="tag">阅读笔记</a></li>
+      <li><a href="blog.html" class="tag">设计</a></li>
+      <li><a href="blog.html" class="tag">工具</a></li>
+      <li><a href="blog.html" class="tag">生活</a></li>
+      <li><a href="blog.html" class="tag">摄影</a></li>
+      <li><a href="blog.html" class="tag">观影</a></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ===================== 页脚 ===================== -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="nav-brand" aria-label="Aonzik">
+          <span class="nav-brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 16 16"><path d="M3 12 L8 2 L13 12 M5.5 8 H10.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+          </span>
+          <span class="nav-brand-name">Aonzik</span>
+        </a>
+        <p class="footer-tagline">记录思考、技术与生活，文字是留存时光的方式。</p>
+      </div>
+
+      <div>
+        <p class="footer-col-title">导航</p>
+        <ul class="footer-links" role="list">
+          <li><a href="index.html">首页</a></li>
+          <li><a href="blog.html">文章</a></li>
+          <li><a href="about.html">关于</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <p class="footer-col-title">分类</p>
+        <ul class="footer-links" role="list">
+          <li><a href="blog.html">技术</a></li>
+          <li><a href="blog.html">随笔</a></li>
+          <li><a href="blog.html">阅读</a></li>
+          <li><a href="blog.html">设计</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <p class="footer-col-title">联系</p>
+        <ul class="footer-links" role="list">
+          <li><a href="#">GitHub</a></li>
+          <li><a href="#">Twitter / X</a></li>
+          <li><a href="#">RSS 订阅</a></li>
+          <li><a href="mailto:hi@aonzik.com">邮件</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p class="footer-copy">© 2025 Aonzik. 内容遵循 CC BY 4.0 协议。</p>
+      <div class="footer-social">
+        <a href="#" aria-label="GitHub">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0 0 22 12.017C22 6.484 17.522 2 12 2z"/></svg>
+        </a>
+        <a href="#" aria-label="RSS">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19.01 7.38 20 6.18 20C4.98 20 4 19.01 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1z"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- 返回顶部 -->
+<button class="back-to-top" aria-label="返回顶部">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg>
+</button>
+
+<!-- 搜索浮层 -->
+<div class="search-overlay" role="dialog" aria-modal="true" aria-label="搜索">
+  <div class="search-box">
+    <div class="search-input-wrap">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      <input class="search-input" type="search" placeholder="搜索文章…" aria-label="搜索文章" autocomplete="off" spellcheck="false" />
+      <button class="search-close" aria-label="关闭搜索">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <p class="search-hint">按 <kbd>Esc</kbd> 关闭 · <kbd>⌘K</kbd> 快速打开</p>
+  </div>
+</div>
+
+<script src="scripts/main.js"></script>
+</body>
+</html>
