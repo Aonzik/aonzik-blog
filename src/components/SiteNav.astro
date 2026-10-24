@@ -1,0 +1,76 @@
+---
+/**
+ * 站点导航（sticky，滚动 8px 后加毛玻璃与阴影）
+ * 结构逐字复刻原稿 index.html / blog.html / post.html / about.html 的 .site-nav，
+ * 只把 href 换成 Astro 路由，并在 .nav-actions 里多了一个装饰层开关按钮（.btn-decor）。
+ */
+import Decor from './Decor.astro';
+import { nav, site } from '../lib/site';
+
+interface Props {
+  /** 当前页高亮 */
+  active?: 'home' | 'blog' | 'about' | null;
+}
+
+const { active = null } = Astro.props;
+---
+
+<nav class="site-nav" aria-label="主导航">
+  <div class="container">
+    <div class="nav-inner">
+      <a class="nav-brand decor-host" href="/" aria-label="Aonzik 首页">
+        <span class="nav-brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 16 16"><path d="M3 12 L8 2 L13 12 M5.5 8 H10.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none" /></svg>
+        </span>
+        <span class="nav-brand-name">{site.name}</span>
+        <Decor slot="nav-brand-mascot" />
+      </a>
+
+      <ul class="nav-links" role="list">
+        {
+          nav.map((item) => (
+            <li>
+              <a href={item.href} class={active === item.key ? 'is-active' : undefined}>
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+
+      <div class="nav-actions decor-host">
+        <button class="btn-theme" type="button" aria-label="切换颜色主题" title="切换颜色主题">
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" /></svg>
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" /></svg>
+        </button>
+
+        <button class="btn-decor" type="button" data-decor-toggle aria-label="装饰层：开" title="装饰层：开">
+          <svg class="icon-decor-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6.3 6.3l2.8 2.8M15 15l2.8 2.8M17.7 6.3L15 9M9 15l-2.8 2.8" /></svg>
+          <svg class="icon-decor-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6.3 6.3l2.8 2.8M15 15l2.8 2.8M17.7 6.3L15 9M9 15l-2.8 2.8M4 4l16 16" /></svg>
+          <svg class="icon-decor-debug" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" stroke-dasharray="3 3" /><circle cx="12" cy="12" r="1.5" /></svg>
+        </button>
+
+        <button class="btn btn-ghost" type="button" data-search-open aria-label="搜索">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8" /><path d="M21 21l-4.35-4.35" /></svg>
+        </button>
+
+        <button class="btn-menu" type="button" aria-label="打开菜单" aria-expanded="false" aria-controls="nav-drawer">
+          <span></span><span></span><span></span>
+        </button>
+
+        <Decor slot="nav-actions-tail" />
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-drawer decor-host" id="nav-drawer" role="navigation">
+    {
+      nav.map((item) => (
+        <a href={item.href} class={active === item.key ? 'is-active' : undefined}>
+          {item.label}
+        </a>
+      ))
+    }
+    <Decor slot="nav-drawer-foot" />
+  </div>
+</nav>

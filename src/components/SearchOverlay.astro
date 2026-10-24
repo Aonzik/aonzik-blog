@@ -1,0 +1,19 @@
+---
+/**
+ * 搜索浮层 —— 结构与原稿一致（纯前端占位：打开/关闭交互已可用，暂未接真正的搜索）。
+ * TODO(内容层)：接全文搜索（本地索引或第三方），保持这个 DOM 不变。
+ */
+---
+
+<div class="search-overlay" role="dialog" aria-label="搜索">
+  <div class="search-box">
+    <div class="search-input-wrap">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8" /><path d="M21 21l-4.35-4.35" /></svg>
+      <input class="search-input" type="search" placeholder="搜索文章…" aria-label="搜索文章" />
+      <button class="search-close" type="button" aria-label="关闭搜索">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12" /></svg>
+      </button>
+    </div>
+    <p class="search-hint">按 <kbd>Esc</kbd> 关闭 · <kbd>⌘K</kbd> 快速打开</p>
+  </div>
+</div>

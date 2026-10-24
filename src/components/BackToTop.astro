@@ -1,0 +1,11 @@
+---
+/**
+ * 返回顶部按钮 —— 结构逐字复刻原稿；.is-visible 由 main.ts 在 scrollY>600 时加上。
+ */
+import Decor from './Decor.astro';
+---
+
+<button class="back-to-top" type="button" aria-label="返回顶部">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6" /></svg>
+  <Decor slot="back-to-top-mascot" as="span" />
+</button>

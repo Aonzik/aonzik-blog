@@ -1,0 +1,117 @@
+---
+/**
+ * 基础布局
+ * ---------------------------------------------------------------------------
+ * 复刻原稿四个 HTML 的公共骨架：<head>（字体 / 样式 / meta）→ 导航 → 页面内容
+ * → 页脚 → 返回顶部 → 搜索浮层，并额外承载「装饰层」的固定槽位。
+ *
+ * 样式加载顺序刻意与原稿一致：tokens → base → components → responsive → decorations，
+ * 页面自己的 page-*.css 由页面 import（Vite 保证 layout 先于 page），
+ * 因此页面局部规则的层叠位置与原来写在页内 <style> 时完全相同。
+ */
+import '../styles/tokens.css';
+import '../styles/base.css';
+import '../styles/components.css';
+import '../styles/responsive.css';
+import '../styles/decorations.css';
+
+import Decor from '../components/Decor.astro';
+import SiteNav from '../components/SiteNav.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import BackToTop from '../components/BackToTop.astro';
+import SearchOverlay from '../components/SearchOverlay.astro';
+import { site } from '../lib/site';
+
+interface Props {
+  /** <title>，默认站点标题 */
+  title?: string;
+  description?: string;
+  /** 导航高亮 */
+  active?: 'home' | 'blog' | 'about' | null;
+  ogType?: 'website' | 'article';
+}
+
+const {
+  title = site.title,
+  description = site.description,
+  active = null,
+  ogType = 'website',
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site ?? 'https://aonzik.example.com/').href;
+---
+
+<!doctype html>
+<html lang={site.lang} data-theme="light" data-decor="on">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta name="twitter:card" content="summary" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="alternate" type="application/rss+xml" title={`${site.name} — 文章`} href="/rss.xml" />
+    <meta name="theme-color" content="#f6f2ea" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#12100d" media="(prefers-color-scheme: dark)" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600&family=Inter:wght@400;450;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+
+    <script is:inline>
+      // 首屏之前定好主题与装饰层，避免闪一下。
+      // 优先级：URL 查询参数（?decor=debug）> localStorage > 系统偏好
+      (function () {
+        try {
+          var params = new URLSearchParams(location.search);
+          var q = params.get('decor');
+          var mode = q === 'on' || q === 'off' || q === 'debug' ? q : localStorage.getItem('aonzik-decor') || 'on';
+          document.documentElement.setAttribute('data-decor', mode);
+          if (q) {
+            params.delete('decor');
+            var rest = params.toString();
+            history.replaceState(null, '', location.pathname + (rest ? '?' + rest : '') + location.hash);
+          }
+          var saved = localStorage.getItem('aonzik-theme');
+          var dark = saved ? saved === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+          document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+
+  <body>
+    <!-- 装饰层：贴视口的固定槽位（四角 / 两侧 rail / 跟随光标 / 气泡角落） -->
+    <Decor slot="page-corner-tl" />
+    <Decor slot="page-corner-tr" />
+    <Decor slot="page-corner-bl" />
+    <Decor slot="page-corner-br" />
+    <Decor slot="page-rail-left" />
+    <Decor slot="page-rail-right" />
+    <Decor slot="cursor-companion" />
+    <Decor slot="bubble-corner" />
+
+    <slot name="prepend" />
+
+    <SiteNav active={active} />
+
+    <slot />
+
+    <SiteFooter />
+    <BackToTop />
+    <SearchOverlay />
+
+    <script>
+      import '../scripts/main.ts';
+    </script>
+  </body>
+</html>

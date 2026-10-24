@@ -1,0 +1,89 @@
+/* 原站 post.html 页内 <style> 的逐字副本（仅修复首尾空白），由 src/pages/posts/[...id].astro import。
+   原站的层叠顺序为 tokens → base → components → responsive → 本文件，因此本文件必须在全局之后加载。 */
+    /* 阅读进度条仅在文章页显示 */
+    .read-progress { display: block; }
+
+    /* 文章页布局：正文居中，右侧无侧栏 */
+    .article-wrap {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 220px;
+      gap: var(--sp-8);
+      align-items: start;
+      padding-block: var(--sp-8) var(--sp-9);
+    }
+    @media (max-width: 1080px) {
+      .article-wrap { grid-template-columns: minmax(0, 1fr); }
+      .article-aside { display: none; }
+    }
+
+    /* 文章底部：作者 + 分享 */
+    .article-foot {
+      margin-top: var(--sp-8);
+      padding-top: var(--sp-6);
+      border-top: 1px solid var(--rule);
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-6);
+    }
+
+    .share-row {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-3);
+      flex-wrap: wrap;
+    }
+    .share-label {
+      font-size: var(--fs-xs);
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+    }
+
+    /* 上一篇 / 下一篇 */
+    .post-nav {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--sp-4);
+      margin-top: var(--sp-7);
+    }
+    @media (max-width: 640px) { .post-nav { grid-template-columns: 1fr; } }
+
+    .post-nav-item {
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-2);
+      padding: var(--sp-4) var(--sp-5);
+      border: 1px solid var(--rule);
+      border-radius: 2px;
+      background: var(--paper-raised);
+      transition: border-color var(--dur) var(--ease),
+                  box-shadow var(--dur) var(--ease),
+                  transform var(--dur) var(--ease);
+      text-decoration: none;
+    }
+    .post-nav-item:hover {
+      border-color: var(--rule-strong);
+      box-shadow: var(--shadow-sm);
+      transform: translateY(-2px);
+    }
+    .post-nav-dir {
+      font-size: var(--fs-xs);
+      font-family: var(--font-mono);
+      color: var(--ink-faint);
+      letter-spacing: 0.1em;
+    }
+    .post-nav-title {
+      font-size: var(--fs-sm);
+      font-weight: 500;
+      color: var(--ink);
+      line-height: 1.4;
+    }
+    .post-nav-item:hover .post-nav-title { color: var(--accent); }
+    .post-nav-item--next { text-align: right; }
+
+    /* 侧栏：粘性目录 */
+    .article-aside {
+      position: sticky;
+      top: 5.5rem;
+    }

@@ -1,0 +1,156 @@
+/* 原站 about.html 页内 <style> 的逐字副本（仅修复首尾空白），由 src/pages/about.astro import。
+   原站的层叠顺序为 tokens → base → components → responsive → 本文件，因此本文件必须在全局之后加载。 */
+    /* 关于页：简介 + 侧栏 */
+    .about-hero {
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: var(--sp-8);
+      align-items: start;
+      padding-block: var(--sp-8);
+    }
+    @media (max-width: 900px) {
+      .about-hero { grid-template-columns: 1fr; }
+    }
+
+    .about-lead {
+      font-family: var(--font-serif);
+      font-size: clamp(1.4rem, 2.6vw, 2rem);
+      line-height: 1.5;
+      color: var(--ink);
+      letter-spacing: -0.015em;
+    }
+    .about-lead em {
+      font-style: normal;
+      color: var(--accent);
+    }
+
+    .about-body {
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-4);
+      margin-top: var(--sp-5);
+      font-size: var(--fs-base);
+      color: var(--ink-soft);
+      line-height: 1.8;
+      max-width: 58ch;
+    }
+
+    /* 两栏：时间轴 + 技能 */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: var(--sp-8);
+      align-items: start;
+    }
+    @media (max-width: 860px) {
+      .about-grid { grid-template-columns: 1fr; gap: var(--sp-7); }
+    }
+
+    /* 精选作品 / 项目 */
+    .project-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--sp-4);
+    }
+    @media (max-width: 700px) { .project-grid { grid-template-columns: 1fr; } }
+
+    .project-card {
+      padding: var(--sp-5);
+      border: 1px solid var(--rule);
+      border-radius: 2px;
+      background: var(--paper-raised);
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-2);
+      transition: border-color var(--dur) var(--ease),
+                  box-shadow var(--dur) var(--ease),
+                  transform var(--dur) var(--ease);
+      text-decoration: none;
+    }
+    .project-card:hover {
+      border-color: var(--rule-strong);
+      box-shadow: var(--shadow-sm);
+      transform: translateY(-2px);
+    }
+    .project-name {
+      font-family: var(--font-serif);
+      font-size: var(--fs-md);
+      color: var(--ink);
+    }
+    .project-desc {
+      font-size: var(--fs-sm);
+      color: var(--ink-soft);
+      line-height: 1.6;
+    }
+    .project-meta {
+      margin-top: var(--sp-2);
+      font-size: var(--fs-xs);
+      font-family: var(--font-mono);
+      color: var(--ink-faint);
+      letter-spacing: 0.06em;
+    }
+
+    /* 侧栏名片 */
+    .profile-card {
+      position: sticky;
+      top: 5.5rem;
+      border: 1px solid var(--rule);
+      border-radius: 2px;
+      background: var(--paper-raised);
+      padding: var(--sp-6);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--sp-3);
+      text-align: center;
+    }
+    .profile-avatar {
+      width: 7rem;
+      height: 7rem;
+      border-radius: 50%;
+      background: var(--paper-sunken);
+      border: 2px solid var(--rule);
+      display: grid;
+      place-items: center;
+      font-family: var(--font-serif);
+      font-size: var(--fs-2xl);
+      color: var(--ink-faint);
+    }
+    .profile-name {
+      font-family: var(--font-serif);
+      font-size: var(--fs-md);
+      color: var(--ink);
+    }
+    .profile-role {
+      font-size: var(--fs-xs);
+      font-family: var(--font-mono);
+      color: var(--accent);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    .profile-facts {
+      width: 100%;
+      margin-top: var(--sp-3);
+      padding-top: var(--sp-4);
+      border-top: 1px solid var(--rule);
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-2);
+    }
+    .profile-fact {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font-size: var(--fs-sm);
+      gap: var(--sp-3);
+    }
+    .profile-fact dt { color: var(--ink-faint); }
+    .profile-fact dd { color: var(--ink); margin: 0; font-family: var(--font-mono); font-size: var(--fs-xs); }
+
+    /* 联系方式按钮组 */
+    .contact-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--sp-3);
+      margin-top: var(--sp-5);
+    }

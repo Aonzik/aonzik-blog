@@ -1,0 +1,29 @@
+---
+/**
+ * 文章列表行 —— 结构逐字复刻原稿 .post-row（缩略图 5.5rem×4rem + 标题/摘要/元信息）。
+ * 列表行的阅读时长用短文案（「8 分钟」），卡片与文章头用长文案（「约 8 分钟阅读」）。
+ */
+import type { Post } from '../lib/posts';
+import { excerptOf, formatDate, postPath, readingShort } from '../lib/posts';
+
+interface Props {
+  post: Post;
+}
+
+const { post } = Astro.props;
+---
+
+<a class="post-row" href={postPath(post)} role="listitem" data-reveal>
+  <div class="post-row-thumb" aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2" /><path d="M3 9h18M9 21V9" /></svg>
+  </div>
+  <div class="post-row-body">
+    <p class="post-row-title">{post.data.title}</p>
+    <p class="post-row-excerpt">{excerptOf(post)}</p>
+    <div class="post-row-meta">
+      <span class="card-cat">{post.data.category}</span>
+      <span class="card-date">{formatDate(post.data.date)}</span>
+      <span class="card-read">{readingShort(post)}</span>
+    </div>
+  </div>
+</a>

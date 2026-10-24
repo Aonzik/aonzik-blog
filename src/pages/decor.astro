@@ -1,0 +1,99 @@
+---
+/**
+ * 装饰位总览（/decor）—— 把 decorSlots 注册表渲染成一张规格表，
+ * 并给出三个模式切换按钮（[data-decor-set] 由 main.ts 接管）。
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import '../styles/page-blog.css';
+
+import Decor from '../components/Decor.astro';
+import { DECOR_MODES, DECOR_MODE_LABEL, decorSlots, type DecorMode, type DecorSlotKind } from '../lib/decorations';
+
+const shortLabel: Record<DecorMode, string> = { on: '显示', off: '关闭', debug: '调试' };
+
+const groups: { kind: DecorSlotKind; title: string; note: string }[] = [
+  { kind: 'ambient', title: '环境装饰', note: '只出现在 ≥1280px 的页面留白里，永远不会压到正文。' },
+  { kind: 'mascot', title: '吉祥物与立绘', note: '放在卡片的空白角落，建议单色 + 低透明度，别抢内容。' },
+  { kind: 'sticker', title: '贴纸与角标', note: '小而精的点缀，适合表情、符号、小图标。' },
+  { kind: 'ornament', title: '纹样与分隔', note: '章节之间的花边与分隔线，宽度跟随容器。' },
+  { kind: 'ui', title: '跟随交互', note: '跟随光标、气泡这类会动的小装饰，务必用 transform 动画并尊重 reduced-motion。' },
+];
+---
+
+<BaseLayout
+  title="装饰位 — Aonzik"
+  description="博克里为二次元装饰预留的全部位置：名称、位置、建议尺寸与画图提示。"
+  active="home"
+>
+  <main>
+    <div class="container">
+      <div class="page-banner" data-reveal>
+        <p class="eyebrow">装饰层</p>
+        <h1>二次元装饰的<em>预留位</em></h1>
+        <p>共 <strong>{decorSlots.length}</strong> 个空位 · 现在都是空的，填进插画才会占位置</p>
+      </div>
+    </div>
+
+    <section class="section section--tight">
+      <div class="container">
+        <div class="section-head decor-host">
+          <h2>开关</h2>
+          <Decor slot="section-ornament" />
+        </div>
+        <div class="filter-bar" role="group" aria-label="切换装饰层模式">
+          {
+            DECOR_MODES.map((mode) => (
+              <button class="filter-btn" type="button" data-decor-set={mode} title={DECOR_MODE_LABEL[mode]}>
+                {shortLabel[mode]}
+              </button>
+            ))
+          }
+        </div>
+        <p>
+          三个模式分别是「显示」「关闭」「调试」。调试模式会给每个空位画出虚线框并标上名字，
+          用来确认版面上留了哪些位置。导航栏上的装饰开关按钮可以在三者之间循环切换，
+          状态存在 localStorage（<code class="mono">aonzik-decor</code>）；也可以用链接参数直接指定，
+          例如 <code class="mono">?decor=debug</code>。
+        </p>
+        <p>
+          新增一个装饰位只要三步：在 <code class="mono">src/lib/decorations.ts</code> 的
+          <code class="mono">decorSlots</code> 里登记、在 <code class="mono">src/styles/decorations.css</code>
+          第 5 节写位置、在对应组件里放一个 <code class="mono">&lt;Decor slot="…" /&gt;</code>。
+        </p>
+      </div>
+    </section>
+
+    {
+      groups.map((group) => {
+        const slots = decorSlots.filter((slot) => slot.kind === group.kind);
+        if (slots.length === 0) return null;
+
+        return (
+          <section class="section section--tight">
+            <div class="container">
+              <div class="section-head decor-host">
+                <h2>{group.title}</h2>
+                <Decor slot="section-ornament" />
+              </div>
+              <p>{group.note}</p>
+              <ul class="decor-sheet">
+                {slots.map((slot) => (
+                  <li class="decor-sheet__item">
+                    <div class="decor-sheet__stage">
+                      <Decor slot={slot.slot} />
+                    </div>
+                    <p class="decor-sheet__name">{slot.slot}</p>
+                    <p class="decor-sheet__where">{slot.role}</p>
+                    <p class="decor-sheet__where">{slot.where}</p>
+                    <p class="decor-sheet__note">{slot.hint}</p>
+                    <p class="decor-sheet__size">建议尺寸 {slot.size}</p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </section>
+        );
+      })
+    }
+  </main>
+</BaseLayout>

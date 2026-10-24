@@ -1,0 +1,26 @@
+---
+/**
+ * 404 —— 原稿没有这一页，用既有的 banner / 按钮排版搭一个最简版本。
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import '../styles/page-blog.css';
+---
+
+<BaseLayout title="页面不存在 — Aonzik" description="你访问的页面不存在。">
+  <main>
+    <div class="container">
+      <div class="page-banner" data-reveal>
+        <p class="eyebrow">404</p>
+        <h1>这里<em>没有</em>你要找的页面</h1>
+        <p>也许链接失效了，或者这个页面还没有写。</p>
+      </div>
+    </div>
+
+    <div class="container section section--tight">
+      <div class="hero-cta" data-reveal>
+        <a class="btn btn-primary" href="/">回到首页</a>
+        <a class="btn btn-ghost" href="/blog/">浏览文章</a>
+      </div>
+    </div>
+  </main>
+</BaseLayout>

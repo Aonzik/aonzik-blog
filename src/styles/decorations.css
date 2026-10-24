@@ -1,0 +1,520 @@
+/* ============================================================================
+   decorations.css — 二次元装饰「预留位」系统
+   ----------------------------------------------------------------------------
+   与既有美术（纸 / 墨 / 朱砂）的关系：
+   这一层**不改动**任何既有组件的视觉，只做两件事——
+
+   1. 在既有版面上标出「可以放二次元装饰的空位」（虚线框 + 尺寸），
+      位子本身用绝对定位，默认完全透明、不占位、不影响现有排版；
+   2. 提供一个总开关，让装饰可以整体关掉、开、或进入「调试模式」看空位。
+
+   插画/立绘/吉祥物将来直接塞进对应的 .decor-slot 里即可，
+   容器、尺寸、层级、响应式隐藏规则都已经写好，不需要再动布局。
+
+   ── 开关 ────────────────────────────────────────────────────────────────
+   <html data-decor="on|off|debug">        （on = 显示装饰，off = 全部收起）
+   URL 覆盖：?decor=off / ?decor=on / ?decor=debug
+   持久化：localStorage["aonzik-decor"]（脚本见 src/scripts/main.ts）
+   导航栏右侧的 ✦ 按钮在三态之间循环切换。
+
+   ── 尺寸变量 ────────────────────────────────────────────────────────────
+   每个位子的尺寸由组件内联的 --decor-w / --decor-h 决定（见 Decor.astro），
+   也可以在页面里用 `--decor-w` 覆盖。默认值集中在下面的 :root。
+   ========================================================================== */
+
+/* ── 1. tokens：装饰层自己的变量，全部从既有 token 派生 ───────────────── */
+:root {
+  --decor-z: 1;                     /* 装饰默认在内容之后、浮层之前 */
+  --decor-z-ambient: 0;             /* 页面四角/侧栏这类环境装饰更靠后 */
+  --decor-z-fixed: 40;              /* 跟随类装饰（回到顶部、光标伙伴） */
+  --decor-opacity: 0.92;            /* 装饰整体不透明度，避免盖过正文 */
+  --decor-blend: normal;
+
+  --decor-size-xs: 1.25rem;         /* 20px：角标、末端小图标 */
+  --decor-size-sm: 1.75rem;         /* 28px：卡片角贴纸 */
+  --decor-size-md: 3rem;            /* 48px：挂件、徽章 */
+  --decor-size-lg: 6rem;            /* 96px：小插图 */
+  --decor-size-xl: 10rem;           /* 160px：半身立绘 */
+  --decor-size-2xl: 20rem;          /* 320px：全身立绘 */
+
+  --decor-outline: var(--accent);   /* 调试框颜色 */
+  --decor-outline-soft: var(--accent-soft);
+  --decor-label-bg: var(--paper-raised);
+}
+
+/* ── 2. 槽位本体 ───────────────────────────────────────────────────────── */
+.decor-slot {
+  position: absolute;
+  display: block;
+  width: var(--decor-w, var(--decor-size-md));
+  height: var(--decor-h, var(--decor-size-md));
+  margin: 0;
+  pointer-events: none;             /* 装饰永远不吃点击 */
+  user-select: none;
+  opacity: var(--decor-opacity);
+  mix-blend-mode: var(--decor-blend);
+  z-index: var(--decor-z);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  /* 将来放 <img>/<svg>/<slot> 时，内容自动铺满并不溢出 */
+  place-items: center;
+  overflow: visible;
+}
+
+.decor-slot > :where(img, svg, picture, canvas) {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+/* 流式槽位：真的占住版面高度，用于「章节之间 / 页脚地面」这类装饰带。
+   关掉装饰时高度归零，版面自然收回。 */
+.decor-slot--flow {
+  position: relative;
+  inset: auto;
+  width: 100%;
+  max-width: var(--decor-w, 100%);
+  height: var(--decor-h, var(--sp-8));
+  margin-inline: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 把槽位摆到父容器的中线上（多数 badge / 挂件用得上） */
+.decor-slot--center-y {
+  top: 50%;
+  transform: translateY(-50%);
+}
+.decor-slot--center-x {
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* 需要父级提供定位上下文的地方（槽位都挂在下面这些父元素里） */
+.decor-host {
+  position: relative;
+}
+
+/* ── 3. 开关 ───────────────────────────────────────────────────────────── */
+/* off：全部收起 */
+html[data-decor="off"] .decor-slot {
+  display: none !important;
+}
+/* on（默认）：空槽位彻底消失，不占位也不留痕。
+   这是「预留空间」的关键——位子已经量好，但只要你还没把插画塞进去，
+   它就对现有排版毫无影响（含 .decor-slot--flow 这类真正占高度的槽位）。 */
+html[data-decor="on"] .decor-slot:empty {
+  display: none;
+}
+
+/* ── 4. 调试模式：画出空位、标注名字与尺寸 ─────────────────────────────── */
+html[data-decor="debug"] .decor-slot {
+  display: block;
+  opacity: 1;
+  background: var(--decor-outline-soft);
+  outline: 1px dashed var(--decor-outline);
+  outline-offset: 0;
+}
+html[data-decor="debug"] .decor-slot--flow {
+  display: flex;
+}
+html[data-decor="debug"] .decor-slot::after {
+  content: attr(data-decor-slot);
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: translateY(-100%);
+  padding: 1px 4px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  line-height: 1.4;
+  letter-spacing: 0.02em;
+  color: var(--accent);
+  background: var(--decor-label-bg);
+  border: 1px solid var(--decor-outline);
+  white-space: nowrap;
+  opacity: 0.9;
+}
+/* 调试模式下如果槽位是空的，给一个「占位图形」十字，方便对位 */
+html[data-decor="debug"] .decor-slot:empty::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(to right, var(--decor-outline) 0 1px, transparent 1px 100%),
+    linear-gradient(to bottom, var(--decor-outline) 0 1px, transparent 1px 100%);
+  background-position: center;
+  background-size: 100% 100%;
+  opacity: 0.35;
+}
+
+/* ── 5. 各槽位的位置定义 ───────────────────────────────────────────────── */
+/* 说明：数值只使用既有 token；--decor-w / --decor-h 缺省时回落到 --decor-size-* */
+
+/* 5.1 环境装饰（页面四角 / 两侧），只在超宽屏出现，绝不压到正文列 */
+[data-decor-slot="page-corner-tl"],
+[data-decor-slot="page-corner-tr"],
+[data-decor-slot="page-corner-bl"],
+[data-decor-slot="page-corner-br"] {
+  position: fixed;                  /* 贴着视口四角，滚动时不动 */
+  width: var(--decor-w, var(--decor-size-lg));
+  height: var(--decor-h, var(--decor-size-lg));
+  z-index: var(--decor-z-ambient);
+}
+[data-decor-slot="page-corner-tl"] { top: var(--sp-8); left: var(--sp-4); }
+[data-decor-slot="page-corner-tr"] { top: var(--sp-8); right: var(--sp-4); }
+[data-decor-slot="page-corner-bl"] { bottom: var(--sp-7); left: var(--sp-4); }
+[data-decor-slot="page-corner-br"] { bottom: var(--sp-7); right: var(--sp-4); }
+
+[data-decor-slot="page-rail-left"],
+[data-decor-slot="page-rail-right"] {
+  position: fixed;                  /* 两侧长条留白区，同样固定 */
+  top: 32vh;
+  width: var(--decor-w, var(--decor-size-lg));
+  height: var(--decor-h, var(--decor-size-2xl));
+  z-index: var(--decor-z-ambient);
+}
+[data-decor-slot="page-rail-left"] {
+  left: max(var(--sp-4), calc((100vw - var(--container)) / 2 - var(--sp-8)));
+}
+[data-decor-slot="page-rail-right"] {
+  right: max(var(--sp-4), calc((100vw - var(--container)) / 2 - var(--sp-8)));
+}
+
+/* 5.2 导航栏 */
+[data-decor-slot="nav-brand-mascot"] {
+  left: calc(100% + var(--sp-2));
+  width: var(--decor-w, var(--decor-size-xs));
+  height: var(--decor-h, var(--decor-size-xs));
+}
+[data-decor-slot="nav-actions-tail"] {
+  width: var(--decor-w, var(--decor-size-sm));
+  height: var(--decor-h, var(--decor-size-sm));
+  left: calc(100% + var(--sp-2));
+}
+[data-decor-slot="nav-drawer-foot"] {
+  left: 50%;
+  bottom: var(--sp-5);
+  transform: translateX(-50%);
+  width: var(--decor-w, var(--decor-size-lg));
+  height: var(--decor-h, var(--decor-size-lg));
+}
+
+/* 5.3 首页 Hero —— 容器 1180px、文案列 740px，右侧本来就有 ~440px 留白 */
+[data-decor-slot="hero-sprite"] {
+  left: calc(100% + var(--sp-6));
+  top: 0;
+  width: var(--decor-w, var(--decor-size-2xl));
+  height: var(--decor-h, 26rem);
+}
+/* 挂在 hero-tag 药丸的右侧末端 */
+[data-decor-slot="hero-badge"] {
+  left: calc(100% + var(--sp-3));
+  top: 0;
+  width: var(--decor-w, var(--decor-size-md));
+  height: var(--decor-h, var(--decor-size-md));
+}
+[data-decor-slot="hero-title-corner"] {
+  right: 0;
+  bottom: calc(var(--sp-2) * -1);
+  width: var(--decor-w, var(--decor-size-md));
+  height: var(--decor-h, var(--decor-size-md));
+}
+[data-decor-slot="hero-cta-tail"] {
+  left: calc(100% + var(--sp-3));
+  width: var(--decor-w, var(--decor-size-lg));
+  height: var(--decor-h, var(--decor-size-lg));
+}
+[data-decor-slot="hero-ground"] {
+  left: var(--gutter);
+  right: var(--gutter);
+  bottom: 0;
+  width: auto;
+  height: var(--decor-h, var(--decor-size-md));
+  background-size: 100% 100%;
+}
+
+/* 5.4 章节头与章节之间的分隔纹样 */
+/* 挂在 .section-head 的那条 1px 分隔线下方左侧，不压右侧的「全部文章 →」 */
+[data-decor-slot="section-ornament"] {
+  left: 0;
+  bottom: calc(-1 * var(--sp-3));
+  width: var(--decor-w, var(--decor-size-lg));
+  height: var(--decor-h, var(--decor-size-sm));
+}
+[data-decor-slot="content-divider"] {
+  position: relative;
+  left: auto;
+  width: 100%;
+  max-width: var(--container-narrow);
+  height: var(--decor-h, var(--decor-size-md));
+  margin-inline: auto;
+  background-size: contain;
+}
+
+/* 5.5 卡片 */
+[data-decor-slot="card-corner"] {
+  right: var(--sp-2);
+  top: var(--sp-2);
+  width: var(--decor-w, var(--decor-size-sm));
+  height: var(--decor-h, var(--decor-size-sm));
+  z-index: 2;
+}
+[data-decor-slot="card-cover-sticker"] {
+  left: var(--sp-3);
+  bottom: var(--sp-3);
+  width: var(--decor-w, var(--decor-size-lg));
+  height: var(--decor-h, var(--decor-size-lg));
+  z-index: 2;
+}
+
+/* 5.6 文章页 */
+/* 挂在 .prose 右侧：正文列 720px，所在栏约 896px，正好有 176px 空档放立绘 */
+[data-decor-slot="post-body-figure"] {
+  left: calc(100% + var(--sp-5));
+  top: var(--sp-8);
+  width: var(--decor-w, var(--decor-size-xl));
+  height: var(--decor-h, 12rem);
+}
+[data-decor-slot="post-cover-sticker"] {
+  right: var(--sp-4);
+  bottom: var(--sp-4);
+  width: var(--decor-w, var(--decor-size-lg));
+  height: var(--decor-h, var(--decor-size-lg));
+}
+/* 挂在右侧粘性目录下方：aside 栏 220px，目录底下是空的 */
+[data-decor-slot="toc-mascot"] {
+  left: 0;
+  top: calc(100% + var(--sp-4));
+  width: var(--decor-w, var(--decor-size-lg));
+  height: var(--decor-h, var(--decor-size-lg));
+}
+
+/* 5.7 关于页 */
+[data-decor-slot="profile-avatar-frame"] {
+  left: 50%;
+  top: calc(var(--sp-4) * -1);
+  transform: translateX(-50%);
+  width: var(--decor-w, var(--decor-size-lg));
+  height: var(--decor-h, var(--decor-size-sm));
+}
+/* 挂在 .about-body 右侧：正文 58ch（约 580px），栏宽约 816px，右侧有余量 */
+[data-decor-slot="about-hero-figure"] {
+  left: calc(100% + var(--sp-5));
+  top: 0;
+  width: var(--decor-w, var(--decor-size-xl));
+  height: var(--decor-h, 12rem);
+}
+[data-decor-slot="skill-tip"] {
+  left: calc(100% + var(--sp-2));
+  top: 50%;
+  transform: translateY(-50%);
+  width: var(--decor-w, var(--decor-size-xs));
+  height: var(--decor-h, var(--decor-size-xs));
+}
+
+/* 5.8 页脚 */
+[data-decor-slot="footer-mascot"] {
+  right: var(--gutter);
+  bottom: var(--sp-7);
+  width: var(--decor-w, var(--decor-size-xl));
+  height: var(--decor-h, var(--decor-size-xl));
+}
+[data-decor-slot="footer-ground"] {
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: auto;
+  height: var(--decor-h, var(--decor-size-sm));
+  background-size: 100% 100%;
+}
+
+/* 5.9 固定层（返回顶部、光标伙伴、气泡） */
+[data-decor-slot="back-to-top-mascot"] {
+  left: calc(var(--sp-5) * -1);
+  top: calc(var(--sp-5) * -1);
+  width: var(--decor-w, var(--decor-size-md));
+  height: var(--decor-h, var(--decor-size-md));
+}
+[data-decor-slot="cursor-companion"] {
+  position: fixed;
+  right: var(--sp-5);
+  bottom: var(--sp-9);
+  width: var(--decor-w, var(--decor-size-xl));
+  height: var(--decor-h, var(--decor-size-xl));
+  z-index: var(--decor-z-fixed);
+}
+[data-decor-slot="bubble-corner"] {
+  position: fixed;
+  right: calc(var(--sp-5) + var(--sp-2));
+  bottom: calc(var(--sp-9) + var(--decor-size-xl) + var(--sp-2));
+  width: var(--decor-w, 13rem);
+  height: var(--decor-h, var(--decor-size-lg));
+  z-index: var(--decor-z-fixed);
+}
+
+/* ── 6. 导航栏的装饰开关按钮（沿用 .btn-theme 的视觉语言） ─────────────── */
+.btn-decor {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 2.25rem;
+  height: 2.25rem;
+  color: var(--ink-soft);
+  background: transparent;
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: color var(--dur) var(--ease), background var(--dur) var(--ease),
+    border-color var(--dur) var(--ease);
+}
+.btn-decor:hover {
+  color: var(--accent);
+  background: var(--accent-soft);
+  border-color: var(--accent);
+}
+.btn-decor svg {
+  width: 1.05rem;
+  height: 1.05rem;
+}
+.btn-decor .icon-decor-on,
+.btn-decor .icon-decor-off,
+.btn-decor .icon-decor-debug {
+  display: none;
+}
+html[data-decor="on"] .btn-decor .icon-decor-on,
+html[data-decor="off"] .btn-decor .icon-decor-off,
+html[data-decor="debug"] .btn-decor .icon-decor-debug {
+  display: block;
+}
+html[data-decor="debug"] .btn-decor {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+/* ── 7. 响应式：窄屏先保正文，装饰依次退场 ─────────────────────────────── */
+@media (max-width: 1400px) {
+  [data-decor-slot="page-rail-left"],
+  [data-decor-slot="page-rail-right"] {
+    display: none;
+  }
+}
+
+@media (max-width: 1280px) {
+  [data-decor-slot="page-corner-tl"],
+  [data-decor-slot="page-corner-tr"],
+  [data-decor-slot="page-corner-bl"],
+  [data-decor-slot="page-corner-br"],
+  [data-decor-slot="hero-sprite"],
+  [data-decor-slot="about-hero-figure"],
+  [data-decor-slot="post-body-figure"],
+  [data-decor-slot="toc-mascot"] {
+    display: none;
+  }
+}
+
+@media (max-width: 1080px) {
+  [data-decor-slot="hero-cta-tail"],
+  [data-decor-slot="skill-tip"] {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  html {
+    --decor-opacity: 0.85;
+  }
+  [data-decor-slot="footer-mascot"],
+  [data-decor-slot="cursor-companion"],
+  [data-decor-slot="bubble-corner"],
+  [data-decor-slot="back-to-top-mascot"],
+  [data-decor-slot="nav-actions-tail"] {
+    display: none;
+  }
+  /* 移动端只保留「贴合版面边缘」的装饰：角标、封面贴纸、地面带 */
+  [data-decor-slot="hero-ground"],
+  [data-decor-slot="footer-ground"],
+  [data-decor-slot="content-divider"],
+  [data-decor-slot="card-corner"],
+  [data-decor-slot="card-cover-sticker"],
+  [data-decor-slot="post-cover-sticker"],
+  [data-decor-slot="hero-badge"] {
+    display: block;
+  }
+}
+
+/* ── 8. 打印 & 无障碍 ─────────────────────────────────────────────────── */
+@media print {
+  .decor-slot,
+  .btn-decor {
+    display: none !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .decor-slot,
+  .btn-decor {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* ── 9. /decor 总览页（规格表）用到的少量排版 ──────────────────────────── */
+.decor-sheet {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: var(--sp-5);
+  list-style: none;
+  padding: 0;
+}
+.decor-sheet__item {
+  padding: var(--sp-4);
+  background: var(--paper-raised);
+  border: 1px solid var(--rule);
+}
+.decor-sheet__stage {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 8rem;
+  margin-bottom: var(--sp-3);
+  background: var(--paper-sunken);
+  border: 1px solid var(--rule);
+  /* 让槽位在规格里回到静态流，方便估尺寸 */
+  --decor-h: 6rem;
+}
+.decor-sheet__stage > .decor-slot {
+  position: static;
+  transform: none;
+  background: var(--accent-soft);
+  outline: 1px dashed var(--accent);
+}
+.decor-sheet__name {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  color: var(--accent);
+}
+.decor-sheet__where,
+.decor-sheet__note {
+  font-size: var(--fs-sm);
+  color: var(--ink-soft);
+}
+.decor-sheet__size {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  color: var(--ink-faint);
+}
+/* /decor 上的模式按钮：当前模式沿用 .filter-btn.is-active 的朱砂底 */
+html[data-decor="on"] [data-decor-set="on"],
+html[data-decor="off"] [data-decor-set="off"],
+html[data-decor="debug"] [data-decor-set="debug"] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--paper-raised);
+}

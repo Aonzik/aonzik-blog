@@ -1,0 +1,78 @@
+---
+/**
+ * 话题总览 —— 分类与标签两组清单（带计数）。
+ * 复用原稿 blog.html 的 `.page-banner` 与 `.tag-list` 排版，未新增任何样式。
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import '../../styles/page-blog.css';
+
+import { getCollection } from 'astro:content';
+import Decor from '../../components/Decor.astro';
+import {
+  categoryCounts,
+  published,
+  sortPosts,
+  tagCounts,
+  tagPath,
+} from '../../lib/posts';
+import { CATEGORY_ORDER } from '../../lib/site';
+
+const posts = sortPosts(published(await getCollection('posts')));
+const categories = categoryCounts(posts, CATEGORY_ORDER);
+// 与分类重名的标签（技术 / 随笔 / 生活）只在「分类」里列一次，避免同一个话题出现两遍
+const tags = tagCounts(posts).filter((entry) => !CATEGORY_ORDER.includes(entry.tag));
+const topicTotal =
+  new Set([...categories.map((entry) => entry.name), ...tags.map((entry) => entry.tag)]).size;
+---
+
+<BaseLayout title="标签 — Aonzik" description="按分类与标签浏览全部文章。" active="blog">
+  <main>
+    <div class="container">
+      <div class="page-banner" data-reveal>
+        <p class="eyebrow">全部话题</p>
+        <h1>共 <strong>{topicTotal}</strong> 个话题</h1>
+        <p>按分类与标签浏览，现有 {posts.length} 篇文章 · 持续更新</p>
+      </div>
+    </div>
+
+    <section class="section section--tight">
+      <div class="container">
+        <div class="section-head decor-host">
+          <h2>分类</h2>
+          <Decor slot="section-ornament" />
+        </div>
+        <ul class="tag-list" role="list" data-reveal>
+          {
+            categories.map((entry) => (
+              <li>
+                <a class="tag" href={tagPath(entry.name)}>
+                  {entry.name} <span>{entry.count}</span>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </section>
+
+    <section class="section section--tight">
+      <div class="container">
+        <div class="section-head decor-host">
+          <h2>标签</h2>
+          <Decor slot="section-ornament" />
+        </div>
+        <ul class="tag-list" role="list" data-reveal>
+          {
+            tags.map((entry) => (
+              <li>
+                <a class="tag" href={tagPath(entry.tag)}>
+                  {entry.tag} <span>{entry.count}</span>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </section>
+  </main>
+</BaseLayout>

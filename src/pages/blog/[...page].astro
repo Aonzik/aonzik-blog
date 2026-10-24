@@ -1,0 +1,46 @@
+---
+/**
+ * 文章列表（/blog/ 及分页 /blog/2/ …）—— 结构逐字复刻原稿 blog.html。
+ * 分页由数据驱动：12 篇 / 每页 6 = 2 页。
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import '../../styles/page-blog.css';
+
+import type { GetStaticPaths } from 'astro';
+import { getCollection } from 'astro:content';
+import BlogList from '../../components/BlogList.astro';
+import { PAGE_SIZE, published, sortPosts } from '../../lib/posts';
+
+export const getStaticPaths = (async ({ paginate }) => {
+  const posts = sortPosts(published(await getCollection('posts')));
+  return paginate(posts, { pageSize: PAGE_SIZE });
+}) satisfies GetStaticPaths;
+
+const { page } = Astro.props;
+const allPosts = sortPosts(published(await getCollection('posts')));
+---
+
+<BaseLayout
+  title="文章 — Aonzik"
+  description="所有文章列表，涵盖技术、随笔、阅读笔记等分类。"
+  active="blog"
+>
+  <main>
+    <div class="container">
+      <div class="page-banner" data-reveal>
+        <p class="eyebrow">全部文章</p>
+        <h1>文字是<em>留存</em>时光的方式</h1>
+        <p>共 <strong>{page.total}</strong> 篇文章 · 持续更新</p>
+      </div>
+    </div>
+
+    <BlogList
+      pagePosts={page.data}
+      allPosts={allPosts}
+      basePath="/blog"
+      current={page.currentPage}
+      last={page.lastPage}
+      active="全部"
+    />
+  </main>
+</BaseLayout>

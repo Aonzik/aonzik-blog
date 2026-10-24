@@ -1,0 +1,40 @@
+---
+/**
+ * 目录（Table of Contents）—— 结构与原稿一致，文章页会用到两次：
+ *   正文内一份（aria-label="目录"）、右侧粘性侧栏一份（aria-label="页面目录"）。
+ * items 直接来自 Astro 的 render(entry).headings（h2/h3）。
+ */
+import Decor from './Decor.astro';
+
+export interface TocItem {
+  depth: number;
+  slug: string;
+  text: string;
+}
+
+interface Props {
+  items: TocItem[];
+  /** nav 的 aria-label */
+  label?: string;
+  /** 标题文字 */
+  title?: string;
+  /** 是否带上目录下方的装饰挂件（只有右侧侧栏那一份需要） */
+  withDecor?: boolean;
+}
+
+const { items, label = '目录', title = '目录', withDecor = false } = Astro.props;
+---
+
+<nav class="toc decor-host" aria-label={label}>
+  <p class="toc-title">{title}</p>
+  <ul class="toc-list" role="list">
+    {
+      items.map((item) => (
+        <li class:list={['toc-item', item.depth === 3 && 'toc-item--h3']}>
+          <a href={`#${item.slug}`}>{item.text}</a>
+        </li>
+      ))
+    }
+  </ul>
+  {withDecor && <Decor slot="toc-mascot" />}
+</nav>

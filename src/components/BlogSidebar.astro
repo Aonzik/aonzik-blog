@@ -1,0 +1,61 @@
+---
+/**
+ * 博客侧栏 —— 三个 widget 逐字复刻原稿（分类计数 / 最新文章 / RSS 订阅）。
+ * 分类计数用的是「分类」口径（与原稿侧栏数字一致）。
+ */
+import type { Post } from '../lib/posts';
+import { categoryCounts, formatDate, postPath, tagPath } from '../lib/posts';
+import { CATEGORY_ORDER, site } from '../lib/site';
+
+interface Props {
+  /** 已排序、已滤草稿的全部文章 */
+  posts: Post[];
+}
+
+const { posts } = Astro.props;
+const counts = categoryCounts(posts, CATEGORY_ORDER);
+const latest = posts.slice(0, 4);
+---
+
+<aside class="sidebar blog-sidebar" aria-label="侧边栏">
+  <div class="widget" data-reveal>
+    <p class="widget-title">分类</p>
+    <ul class="tag-list" role="list">
+      <li>
+        <a class="tag" href="/blog/">全部 <span>{posts.length}</span></a>
+      </li>
+      {
+        counts.map((entry) => (
+          <li>
+            <a class="tag" href={tagPath(entry.name)}>
+              {entry.name} <span>{entry.count}</span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+
+  <div class="widget" data-reveal>
+    <p class="widget-title">最新文章</p>
+    <ul class="widget-posts" role="list">
+      {
+        latest.map((post) => (
+          <li class="widget-post-item">
+            <a class="widget-post-title" href={postPath(post)}>{post.data.title}</a>
+            <span class="widget-post-date">{formatDate(post.data.date)}</span>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+
+  <div class="widget" data-reveal>
+    <p class="widget-title">订阅</p>
+    <p>通过 RSS 订阅，第一时间获取新文章通知。</p>
+    <a class="btn btn-ghost" href={site.links.feed}>
+      <svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19.01 7.38 20 6.18 20C4.98 20 4 19.01 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1z" /></svg>
+      订阅 RSS
+    </a>
+  </div>
+</aside>

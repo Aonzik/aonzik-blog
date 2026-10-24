@@ -1,0 +1,45 @@
+---
+/**
+ * 装饰位插槽（Decoration Slot）
+ * ---------------------------------------------------------------------------
+ * 全站所有「二次元装饰预留位」都用这一个组件。
+ *
+ * 用法：
+ *   <Decor slot="hero-sprite" />                       // 空位，不占版面、不改变现有美术
+ *   <Decor slot="hero-sprite"><img src="/decor/x.png" alt="" /></Decor>
+ *   <Decor slot="content-divider" class="decor-slot--flow" />
+ *
+ * 行为：
+ *   - 位置与尺寸全部由 src/styles/decorations.css 里的 [data-decor-slot="…"] 规则决定，
+ *     组件本身不带任何样式，槽位名必须存在于 src/lib/decorations.ts 的 decorSlots 里。
+ *   - html[data-decor="off"]  → 所有槽位 display:none
+ *   - html[data-decor="on"]   → 空槽位 :empty 自动 display:none（只在你塞进内容后才占位）
+ *   - html[data-decor="debug"]→ 画出虚线框 + 槽位名 + 尺寸标签
+ *
+ * 宿主元素需要 position:relative 时，给宿主加 .decor-host（decorations.css 里定义）。
+ * 完整槽位清单与建议尺寸见 /decor 页面。
+ */
+import { decorSlotMap } from '../lib/decorations';
+
+interface Props {
+  /** 槽位名，见 src/lib/decorations.ts 的 decorSlots */
+  slot: string;
+  /** 附加类名，例如 decor-slot--flow / decor-slot--center-y */
+  class?: string;
+  /** 渲染成的标签；放进 <button> 这类只允许 phrasing content 的元素时用 "span" */
+  as?: 'div' | 'span';
+}
+
+const { slot, class: extra = '', as: Tag = 'div' } = Astro.props;
+
+if (!decorSlotMap.has(slot)) {
+  throw new Error(
+    `Decor: 未知的槽位 "${slot}"。请先在 src/lib/decorations.ts 的 decorSlots 里登记，` +
+      `再到 src/styles/decorations.css 里给它定位。`
+  );
+}
+
+const classes = ['decor-slot', extra].filter(Boolean).join(' ');
+---
+
+<Tag class={classes} data-decor-slot={slot} aria-hidden="true"><slot /></Tag>

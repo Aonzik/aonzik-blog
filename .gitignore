@@ -32,3 +32,9 @@ $RECYCLE.BIN/
 
 # Agent 临时交接文档
 .handoff/
+
+# ---------- Astro ----------
+node_modules/
+dist/
+.astro/
+*.log

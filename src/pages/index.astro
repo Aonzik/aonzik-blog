@@ -1,0 +1,96 @@
+---
+/**
+ * 首页 —— 结构逐字复刻原稿 index.html（hero → 精选 → 最新 → 话题 → 页脚）。
+ * 内容改为真实数据：精选 = frontmatter featured 的那篇，最新 = 其余中最新 3 篇。
+ * 原文案里所有「占位」字样都换成真实数据后自然消失。
+ */
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Decor from '../components/Decor.astro';
+import PostCard from '../components/PostCard.astro';
+import { published, sortPosts, tagPath } from '../lib/posts';
+import { heroTags, site } from '../lib/site';
+
+const posts = sortPosts(published(await getCollection('posts')));
+const featured = posts.find((post) => post.data.featured) ?? posts[0];
+const latest = posts.filter((post) => post.id !== featured.id).slice(0, 3);
+---
+
+<BaseLayout title={site.title} description={site.description} active="home">
+  <header class="hero decor-host">
+    <div class="container">
+      <div class="hero-inner decor-host">
+        <span class="hero-tag decor-host" data-reveal>
+          个人博客 · 持续更新中
+          <Decor slot="hero-badge" as="span" />
+        </span>
+
+        <h1 class="hero-title decor-host" data-reveal>
+          写下<em>思考</em>，<br />留住此刻。
+          <Decor slot="hero-title-corner" as="span" />
+        </h1>
+
+        <p class="hero-desc" data-reveal>
+          这里记录技术探索、阅读笔记与日常感悟。<br />内容持续更新，欢迎常来看看。
+        </p>
+
+        <div class="hero-cta decor-host" data-reveal>
+          <a class="btn btn-primary" href="/blog/">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /></svg>
+            浏览文章
+          </a>
+          <a class="btn btn-ghost" href="/about/">了解我</a>
+          <Decor slot="hero-cta-tail" />
+        </div>
+
+        <Decor slot="hero-sprite" />
+      </div>
+    </div>
+    <Decor slot="hero-ground" />
+  </header>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head decor-host">
+        <h2>精选</h2>
+        <a class="eyebrow link-underline" href="/blog/">全部文章 →</a>
+        <Decor slot="section-ornament" />
+      </div>
+      <PostCard post={featured} featured />
+    </div>
+  </section>
+
+  <section class="section section--tight">
+    <div class="container">
+      <div class="section-head decor-host">
+        <h2>最新</h2>
+        <a class="eyebrow link-underline" href="/blog/">更多 →</a>
+        <Decor slot="section-ornament" />
+      </div>
+      <div class="posts-grid">
+        {latest.map((post) => <PostCard post={post} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tight">
+    <div class="container">
+      <Decor slot="content-divider" />
+      <div class="section-head decor-host">
+        <h2>话题</h2>
+        <Decor slot="section-ornament" />
+      </div>
+      <ul class="tag-list" role="list" data-reveal>
+        {
+          heroTags.map((tag) => (
+            <li>
+              <a class="tag" href={tagPath(tag)}>
+                {tag}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+</BaseLayout>

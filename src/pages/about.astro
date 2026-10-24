@@ -1,0 +1,190 @@
+---
+/**
+ * 关于页 —— 结构逐字复刻原稿 about.html（简介 + 名片 → 经历 / 在做的事 / 关键词 →
+ * 做过的东西 → 结尾 CTA）。所有文案与原稿一致，只有「文章 N 篇」改成了真实篇数。
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import '../styles/page-about.css';
+
+import { getCollection } from 'astro:content';
+import Decor from '../components/Decor.astro';
+import { published } from '../lib/posts';
+import { site } from '../lib/site';
+
+const postCount = published(await getCollection('posts')).length;
+
+const lead = { before: '你好，我是 Aonzik。', after: '一个写代码的人，也', em: '写字' };
+
+const intro = [
+  '这个博客建于 2025 年，最初只是想给那些散落的笔记找一个归宿。 后来才慢慢发现，整理本身就是一种思考方式——把想法写下来的时候， 很多含糊的地方会被迫变得清楚。',
+  '我关注设计、技术与生活的交叉地带。技术让人有能力去做事， 设计决定这件事做出来好不好用，而生活决定这件事值不值得做。 三者缺一不可。',
+  '这里的内容没有固定的更新频率，也不追热点。 通常是有了一些想清楚的东西，才会动笔。',
+];
+
+const facts = [
+  { label: '所在地', value: '占位城市' },
+  { label: '建站', value: '2025' },
+  { label: '文章', value: `${postCount} 篇` },
+  { label: '状态', value: '持续更新' },
+];
+
+const timeline = [
+  { year: '2025', title: '开始写这个博客', desc: '占位描述。这里是经历的说明文字，可以写做了什么、学到了什么。' },
+  { year: '2024', title: '某个项目或阶段', desc: '占位描述。这里是经历的说明文字，后续替换为真实内容。' },
+  { year: '2023', title: '另一个里程碑', desc: '占位描述。这里是经历的说明文字，后续替换为真实内容。' },
+  { year: '2022', title: '起点', desc: '占位描述。这里是经历的说明文字，后续替换为真实内容。' },
+];
+
+const skills = [
+  { name: '前端开发', pct: 90 },
+  { name: '界面设计', pct: 75 },
+  { name: '技术写作', pct: 80 },
+  { name: '摄影', pct: 60 },
+];
+
+const keywords = ['占位词一', '占位词二', '占位词三', '占位词四', '占位词五'];
+
+const projects = [
+  { year: '2025', title: '项目名称占位' },
+  { year: '2024', title: '项目名称占位' },
+  { year: '2024', title: '项目名称占位' },
+  { year: '2023', title: '项目名称占位' },
+];
+---
+
+<BaseLayout title="关于 — Aonzik" description="关于这个博客，以及写这些字的人。" active="about">
+  <main>
+    <div class="container">
+      <div class="about-hero">
+        <div>
+          <p class="eyebrow">关于</p>
+          <p class="about-lead" data-reveal>
+            {lead.before}<br />{lead.after}<em>{lead.em}</em>。
+          </p>
+
+          <div class="about-body decor-host" data-reveal>
+            {intro.map((paragraph) => <p>{paragraph}</p>)}
+            <Decor slot="about-hero-figure" />
+          </div>
+
+          <div class="contact-row" data-reveal>
+            <a class="btn btn-primary" href={site.links.email}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2" /><path d="M22 6l-10 7L2 6" /></svg>
+              写邮件
+            </a>
+            <a class="btn btn-ghost" href={site.links.github}>GitHub</a>
+            <a class="btn btn-ghost" href={site.links.rss}>RSS 订阅</a>
+          </div>
+        </div>
+
+        <aside class="profile-card" data-reveal>
+          <div class="profile-avatar decor-host" aria-hidden="true">
+            {site.markLetter}
+            <Decor slot="profile-avatar-frame" />
+          </div>
+          <p class="profile-name">{site.author.name}</p>
+          <p class="profile-role">{site.author.role}</p>
+          <dl class="profile-facts">
+            {
+              facts.map((fact) => (
+                <div class="profile-fact">
+                  <dt>{fact.label}</dt>
+                  <dd>{fact.value}</dd>
+                </div>
+              ))
+            }
+          </dl>
+        </aside>
+      </div>
+    </div>
+
+    <section class="section section--tight">
+      <div class="container">
+        <div class="about-grid">
+          <div>
+            <div class="section-head decor-host">
+              <h2>经历</h2>
+              <Decor slot="section-ornament" />
+            </div>
+            <div class="timeline" data-reveal>
+              {
+                timeline.map((item) => (
+                  <div class="timeline-item">
+                    <span class="timeline-year">{item.year}</span>
+                    <p class="timeline-title">{item.title}</p>
+                    <p class="timeline-desc">{item.desc}</p>
+                  </div>
+                ))
+              }
+            </div>
+          </div>
+
+          <div>
+            <div class="section-head decor-host">
+              <h2>在做的事</h2>
+              <Decor slot="section-ornament" />
+            </div>
+            <div class="skill-list decor-host" data-reveal>
+              {
+                skills.map((skill, index) => (
+                  <div class="skill-item">
+                    <div class="skill-header">
+                      <span class="skill-name">{skill.name}</span>
+                      <span class="skill-pct">占位 {skill.pct}%</span>
+                    </div>
+                    <div class="skill-track">
+                      <div class="skill-bar" data-pct={skill.pct}></div>
+                    </div>
+                    {index === 0 && <Decor slot="skill-tip" />}
+                  </div>
+                ))
+              }
+            </div>
+
+            <div class="section-head decor-host">
+              <h2>关键词</h2>
+              <Decor slot="section-ornament" />
+            </div>
+            <ul class="tag-list" role="list" data-reveal>
+              {keywords.map((word) => <li><a class="tag" href="/tags/">{word}</a></li>)}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--tight">
+      <div class="container">
+        <div class="section-head decor-host">
+          <h2>做过的东西</h2>
+          <Decor slot="section-ornament" />
+        </div>
+        <div class="project-grid">
+          {
+            projects.map((project) => (
+              <a class="project-card" href="#" data-reveal>
+                <p class="project-name">{project.title}</p>
+                <p class="project-desc">一句话描述这个项目做了什么，解决了什么问题。后续补充真实内容。</p>
+                <p class="project-meta">{project.year} · 占位标签</p>
+              </a>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--tight">
+      <div class="container">
+        <Decor slot="content-divider" />
+        <div class="author-card" data-reveal>
+          <p class="eyebrow">保持联系</p>
+          <p>如果这里的内容对你有用，欢迎写信聊聊。</p>
+          <a class="btn btn-primary" href={site.links.email}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /></svg>
+            发送邮件
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+</BaseLayout>

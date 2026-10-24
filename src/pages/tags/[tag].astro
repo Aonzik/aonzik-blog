@@ -1,0 +1,53 @@
+---
+/**
+ * 单个话题页（分类名或标签名，统一走 /tags/<话题>/）。
+ * 版面完全复用 /blog/ 的 banner + BlogList；分类话题会高亮筛选条。
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import '../../styles/page-blog.css';
+
+import { getCollection } from 'astro:content';
+import BlogList from '../../components/BlogList.astro';
+import { published, sortPosts, topicNames, topicPosts } from '../../lib/posts';
+import { CATEGORY_ORDER } from '../../lib/site';
+
+export async function getStaticPaths() {
+  const posts = sortPosts(published(await getCollection('posts')));
+
+  return topicNames(posts).map((name) => ({
+    params: { tag: name },
+    props: { name },
+  }));
+}
+
+const allPosts = sortPosts(published(await getCollection('posts')));
+const { name } = Astro.props;
+const topic = topicPosts(allPosts, name);
+const isCategory = CATEGORY_ORDER.includes(name);
+---
+
+<BaseLayout
+  title={`${name} — Aonzik`}
+  description={`话题「${name}」下的全部文章列表。`}
+  active="blog"
+>
+  <main>
+    <div class="container">
+      <div class="page-banner" data-reveal>
+        <p class="eyebrow">话题 · {name}</p>
+        <h1>文字是<em>留存</em>时光的方式</h1>
+        <p>共 <strong>{topic.length}</strong> 篇文章 · 持续更新</p>
+      </div>
+    </div>
+
+    <BlogList
+      pagePosts={topic}
+      allPosts={allPosts}
+      basePath={`/tags/${encodeURIComponent(name)}`}
+      current={1}
+      last={1}
+      active={isCategory ? name : '全部'}
+      showFilters={isCategory}
+    />
+  </main>
+</BaseLayout>

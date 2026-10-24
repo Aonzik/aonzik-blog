@@ -1,0 +1,42 @@
+---
+/**
+ * 文章卡片 —— 结构逐字复刻原稿的 a.card（含可选 .card-featured）。
+ * 封面仍是原稿的 SVG 占位；将来有真封面时把 .card-cover-placeholder 换成 <img>。
+ */
+import Decor from './Decor.astro';
+import type { Post } from '../lib/posts';
+import { excerptOf, formatDate, postPath, readingLabel, readingMid } from '../lib/posts';
+
+interface Props {
+  post: Post;
+  /** 精选卡：横向大卡 */
+  featured?: boolean;
+}
+
+const { post, featured = false } = Astro.props;
+---
+
+<a class:list={['card', 'decor-host', featured && 'card-featured']} href={postPath(post)} data-reveal>
+  <div class="card-cover decor-host">
+    <div class="card-cover-placeholder">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2" /><path d="M3 9h18M9 21V9" /></svg>
+    </div>
+    <Decor slot="card-cover-sticker" />
+  </div>
+  <div class="card-body">
+    <div class="card-meta">
+      <span class="card-cat">{post.data.category}</span>
+      <span class="card-date">{formatDate(post.data.date)}</span>
+    </div>
+    <h3 class="card-title">{post.data.title}</h3>
+    <p class="card-excerpt">{excerptOf(post)}</p>
+    <div class="card-footer">
+      <span class="card-read">{featured ? readingLabel(post) : readingMid(post)}</span>
+      <span class="card-arrow">
+        {featured ? '阅读全文' : '阅读'}
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
+      </span>
+    </div>
+  </div>
+  <Decor slot="card-corner" />
+</a>

@@ -1,0 +1,112 @@
+---
+/**
+ * 列表区（筛选条 + 文章行 + 分页 + 侧栏）—— 结构与原稿 blog.html 的
+ * `div.container.section.section--tight > div.blog-layout` 完全一致，
+ * 由 /blog/（分页）与 /tags/<话题>/ 共用。
+ *
+ * 两处与原稿的有意差异：
+ *   1. 原稿的筛选按钮是纯占位 <button>，这里改成指向真实话题页的 <a>（类名与视觉不变）；
+ *   2. 分页由数据驱动（12 篇 / 每页 6 篇 = 2 页），不再是写死的 3 个按钮。
+ */
+import PostRow from './PostRow.astro';
+import BlogSidebar from './BlogSidebar.astro';
+import type { Post } from '../lib/posts';
+import { tagPath } from '../lib/posts';
+import { CATEGORY_ORDER } from '../lib/site';
+
+interface Props {
+  /** 当前页要渲染的文章 */
+  pagePosts: Post[];
+  /** 全部文章（侧栏统计用） */
+  allPosts: Post[];
+  /** 列表所在的基准路径，如 /blog；用于拼分页链接 */
+  basePath: string;
+  current: number;
+  last: number;
+  /** 当前高亮的筛选标签：'全部' 或分类名 */
+  active?: string;
+  /** 话题页不带筛选条时可关掉 */
+  showFilters?: boolean;
+}
+
+const {
+  pagePosts,
+  allPosts,
+  basePath,
+  current,
+  last,
+  active = '全部',
+  showFilters = true,
+} = Astro.props;
+
+const filters = ['全部', ...CATEGORY_ORDER];
+
+const pageHref = (n: number) => (n <= 1 ? `${basePath}/` : `${basePath}/${n}/`);
+const numbers = Array.from({ length: last }, (_, i) => i + 1);
+---
+
+<div class="container section section--tight">
+  <div class="blog-layout">
+    <div>
+      {
+        showFilters && (
+          <div class="filter-bar" role="group" aria-label="按分类筛选">
+            {filters.map((name) => (
+              <a
+                class:list={['filter-btn', name === active && 'is-active']}
+                href={name === '全部' ? '/blog/' : tagPath(name)}
+                aria-current={name === active ? 'page' : undefined}
+              >
+                {name}
+              </a>
+            ))}
+          </div>
+        )
+      }
+
+      <div role="list">
+        {pagePosts.map((post) => <PostRow post={post} />)}
+      </div>
+
+      <nav class="pagination" aria-label="分页">
+        {
+          current > 1 ? (
+            <a class="page-btn" href={pageHref(current - 1)} aria-label="上一页">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
+            </a>
+          ) : (
+            <button class="page-btn" type="button" disabled aria-label="上一页">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
+            </button>
+          )
+        }
+
+        {
+          numbers.map((n) =>
+            n === current ? (
+              <span class="page-btn is-active" aria-current="page">{n}</span>
+            ) : (
+              <a class="page-btn" href={pageHref(n)} aria-label={`第 ${n} 页`}>
+                {n}
+              </a>
+            )
+          )
+        }
+
+        {
+          current < last ? (
+            <a class="page-btn" href={pageHref(current + 1)} aria-label="下一页">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6" /></svg>
+            </a>
+          ) : (
+            <button class="page-btn" type="button" disabled aria-label="下一页">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6" /></svg>
+            </button>
+          )
+        }
+      </nav>
+    </div>
+
+    <BlogSidebar posts={allPosts} />
+  </div>
+</div>
