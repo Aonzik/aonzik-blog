@@ -34,6 +34,9 @@
   .nav-links { display: none; }
   .btn-menu { display: flex; }
 
+  /* 中文名在窄屏上让位给导航按钮 */
+  .nav-brand-sub { display: none; }
+
   /* Hero */
   .hero { padding-block: var(--sp-8); }
   .hero-title { font-size: clamp(2.2rem, 11vw, 3.2rem); }

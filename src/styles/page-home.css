@@ -1,0 +1,377 @@
+/* ============================================================
+   首页 —— 扉页式个人主页
+   ------------------------------------------------------------
+   由 src/pages/index.astro import。Vite 保证 layout 的全局样式
+   (tokens → base → components → responsive → decorations) 先于本文件，
+   因此这里可以安全地覆盖 .hero / .section-head 的默认排版。
+   ============================================================ */
+
+/* ---- 扉页 ---------------------------------------------------- */
+
+.home-hero__grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(11rem, 13.5rem);
+  gap: var(--sp-8);
+  align-items: stretch;
+}
+
+.home-hero__main {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--sp-4);
+  min-width: 0;
+}
+
+/* 报头：一条细小的元信息，代替原来的胶囊「个人博客 · 持续更新中」 */
+.home-hero__masthead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-1) var(--sp-3);
+  font-family: var(--font-sans);
+  font-size: var(--fs-xs);
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.home-hero__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex-shrink: 0;
+}
+
+.home-hero__sep {
+  color: var(--rule-strong);
+  letter-spacing: 0;
+}
+
+.home-hero__title {
+  font-size: clamp(2.5rem, 5.6vw, 4.9rem);
+}
+
+/* 别名行：汉字名 + 拉丁名，中间一道细斜线 */
+.home-hero__alias {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: var(--sp-2) var(--sp-3);
+  margin-top: calc(var(--sp-1) * -1);
+}
+
+.home-hero__alias-zh {
+  font-family: var(--font-serif);
+  font-size: var(--fs-md);
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  color: var(--ink);
+}
+
+.home-hero__alias-en {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.home-hero__alias-en::before {
+  content: "/";
+  margin-right: var(--sp-3);
+  color: var(--rule-strong);
+}
+
+.home-hero__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+  list-style: none;
+  margin-top: var(--sp-1);
+}
+
+/* ---- 右侧竖排名 + 印章 --------------------------------------- */
+
+.home-hero__rail {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-5);
+  padding-left: var(--sp-6);
+  border-left: 1px solid var(--rule);
+}
+
+.home-hero__vertical {
+  writing-mode: vertical-rl;
+  font-family: var(--font-serif);
+  font-size: clamp(1.4rem, 1.9vw, 1.85rem);
+  letter-spacing: 0.4em;
+  line-height: 1;
+  color: var(--ink-faint);
+}
+
+/* 朱砂印章：竖排两字，微微歪一点，像随手盖上去的 */
+.home-hero__seal {
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+  padding: 0.7rem 0.45rem;
+  border: 2px solid var(--accent);
+  border-radius: var(--radius-sm);
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-family: var(--font-serif);
+  font-size: 1.2rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  line-height: 1.15;
+  transform: rotate(-3deg);
+  align-self: flex-end;
+}
+
+.home-hero__rail-note {
+  writing-mode: vertical-rl;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.34em;
+  color: var(--ink-faint);
+  opacity: 0.7;
+  align-self: flex-end;
+}
+
+/* ---- 版本记录（扉页下方的一行事实） --------------------------- */
+
+.colophon {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--sp-5);
+  margin-top: var(--sp-9);
+  padding-top: var(--sp-5);
+  border-top: 1px solid var(--rule-strong);
+}
+
+.colophon__item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1);
+  min-width: 0;
+}
+
+.colophon dt {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.colophon dd {
+  font-family: var(--font-serif);
+  font-size: var(--fs-sm);
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+
+/* ---- 小节编号：01 / 02 / 03 --------------------------------- */
+
+.section-head h2 .section-no {
+  font-family: var(--font-mono);
+  font-size: 0.72em;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  color: var(--ink-faint);
+  margin-right: 0.9em;
+  vertical-align: 0.1em;
+}
+
+/* ---- 现在：三行清单，不用卡片 --------------------------------- */
+
+.now-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.now-item {
+  display: grid;
+  grid-template-columns: 3.5rem minmax(0, 1fr);
+  gap: var(--sp-4);
+  padding-block: var(--sp-5);
+  border-bottom: 1px solid var(--rule);
+}
+
+.now-item:first-child {
+  padding-top: 0;
+}
+
+.now-no {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  letter-spacing: 0.14em;
+  color: var(--accent);
+  padding-top: 0.45em;
+}
+
+.now-title {
+  font-family: var(--font-serif);
+  font-size: var(--fs-md);
+  line-height: 1.45;
+  color: var(--ink);
+}
+
+.now-desc {
+  margin-top: var(--sp-2);
+  max-width: 64ch;
+  font-size: var(--fs-sm);
+  line-height: 1.75;
+  color: var(--ink-soft);
+}
+
+.now-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-1) var(--sp-3);
+  list-style: none;
+  margin-top: var(--sp-3);
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  letter-spacing: 0.08em;
+  color: var(--ink-faint);
+}
+
+.now-tags li::before {
+  content: "#";
+  margin-right: 0.25em;
+  color: var(--rule-strong);
+}
+
+/* ---- 兴趣：三栏词条 + 在玩的一行外链 --------------------------- */
+
+.interest-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--sp-6);
+  padding-bottom: var(--sp-6);
+  border-bottom: 1px solid var(--rule);
+}
+
+.interest-label {
+  display: flex;
+  align-items: baseline;
+  gap: var(--sp-2);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--ink);
+}
+
+.interest-label span {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.interest-body {
+  margin-top: var(--sp-3);
+  font-family: var(--font-serif);
+  font-size: var(--fs-base);
+  line-height: 1.75;
+  color: var(--ink-soft);
+}
+
+.game-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--sp-2) var(--sp-5);
+  padding-top: var(--sp-5);
+}
+
+.game-row__label {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.game-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2) var(--sp-5);
+  list-style: none;
+}
+
+.game-list a {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.3em;
+  padding-bottom: 1px;
+  font-size: var(--fs-sm);
+  color: var(--ink-soft);
+  border-bottom: 1px solid transparent;
+  transition: color var(--dur) var(--ease),
+              border-color var(--dur) var(--ease);
+}
+
+.game-list a span {
+  font-size: 0.8em;
+  color: var(--ink-faint);
+}
+
+.game-list a:hover {
+  color: var(--accent);
+  border-color: currentColor;
+}
+
+/* ---- 响应式 --------------------------------------------------- */
+
+@media (max-width: 900px) {
+  /* 竖排名是纯装饰，窄屏上直接收起（别名行已经写了名字） */
+  .home-hero__rail {
+    display: none;
+  }
+
+  .home-hero__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .colophon {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--sp-4) var(--sp-5);
+    margin-top: var(--sp-8);
+  }
+
+  .interest-grid {
+    grid-template-columns: 1fr;
+    gap: var(--sp-5);
+  }
+}
+
+@media (max-width: 768px) {
+  /* 覆盖 responsive.css 里 .hero-title 的移动端字号，再收一档 */
+  .home-hero__title {
+    font-size: clamp(2.2rem, 9.5vw, 3.2rem);
+  }
+}
+
+@media (max-width: 600px) {
+  .now-item {
+    grid-template-columns: 2.25rem minmax(0, 1fr);
+    gap: var(--sp-3);
+  }
+
+  .home-hero__alias-en::before {
+    display: none;
+  }
+}

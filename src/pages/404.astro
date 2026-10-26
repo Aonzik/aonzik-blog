@@ -4,9 +4,10 @@
  */
 import BaseLayout from '../layouts/BaseLayout.astro';
 import '../styles/page-blog.css';
+import { titled } from '../lib/site';
 ---
 
-<BaseLayout title="页面不存在 — Aonzik" description="你访问的页面不存在。">
+<BaseLayout title={titled('页面不存在')} description="你访问的页面不存在。">
   <main>
     <div class="container">
       <div class="page-banner" data-reveal>

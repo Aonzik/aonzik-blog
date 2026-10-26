@@ -1,7 +1,9 @@
 ---
 /**
- * 关于页 —— 结构逐字复刻原稿 about.html（简介 + 名片 → 经历 / 在做的事 / 关键词 →
- * 做过的东西 → 结尾 CTA）。所有文案与原稿一致，只有「文章 N 篇」改成了真实篇数。
+ * 关于页 —— 自我介绍（docs/bio.md）、研究线索、工具栈、兴趣。
+ *
+ * 版面和文案都换成了真人资料：技能百分比条（本来就没有数据支撑）换成
+ * 分组工具 chip，占位项目卡换成兴趣四卡，「文章 N 篇」仍是真实篇数。
  */
 import BaseLayout from '../layouts/BaseLayout.astro';
 import '../styles/page-about.css';
@@ -9,50 +11,44 @@ import '../styles/page-about.css';
 import { getCollection } from 'astro:content';
 import Decor from '../components/Decor.astro';
 import { published } from '../lib/posts';
-import { site } from '../lib/site';
+import { site, titled } from '../lib/site';
+import { games, identity, interests, intro, personalTags, research, stack } from '../lib/profile';
 
 const postCount = published(await getCollection('posts')).length;
 
-const lead = { before: '你好，我是 Aonzik。', after: '一个写代码的人，也', em: '写字' };
-
-const intro = [
-  '这个博客建于 2025 年，最初只是想给那些散落的笔记找一个归宿。 后来才慢慢发现，整理本身就是一种思考方式——把想法写下来的时候， 很多含糊的地方会被迫变得清楚。',
-  '我关注设计、技术与生活的交叉地带。技术让人有能力去做事， 设计决定这件事做出来好不好用，而生活决定这件事值不值得做。 三者缺一不可。',
-  '这里的内容没有固定的更新频率，也不追热点。 通常是有了一些想清楚的东西，才会动笔。',
-];
+const lead = {
+  before: '你好，我是川崎·杭汐，',
+  after: '一个学人工智能的学生，也',
+  em: '写字',
+};
 
 const facts = [
-  { label: '所在地', value: '占位城市' },
-  { label: '建站', value: '2025' },
+  { label: '现居', value: identity.city },
+  { label: '语言', value: identity.languages },
+  { label: '专业', value: `${identity.major} · 本科在读` },
   { label: '文章', value: `${postCount} 篇` },
-  { label: '状态', value: '持续更新' },
 ];
 
-const timeline = [
-  { year: '2025', title: '开始写这个博客', desc: '占位描述。这里是经历的说明文字，可以写做了什么、学到了什么。' },
-  { year: '2024', title: '某个项目或阶段', desc: '占位描述。这里是经历的说明文字，后续替换为真实内容。' },
-  { year: '2023', title: '另一个里程碑', desc: '占位描述。这里是经历的说明文字，后续替换为真实内容。' },
-  { year: '2022', title: '起点', desc: '占位描述。这里是经历的说明文字，后续替换为真实内容。' },
-];
-
-const skills = [
-  { name: '前端开发', pct: 90 },
-  { name: '界面设计', pct: 75 },
-  { name: '技术写作', pct: 80 },
-  { name: '摄影', pct: 60 },
-];
-
-const keywords = ['占位词一', '占位词二', '占位词三', '占位词四', '占位词五'];
-
-const projects = [
-  { year: '2025', title: '项目名称占位' },
-  { year: '2024', title: '项目名称占位' },
-  { year: '2024', title: '项目名称占位' },
-  { year: '2023', title: '项目名称占位' },
+/** 兴趣四卡：bio.md 的探索 / 输入 / 创造 + 在玩的游戏 */
+const interestCards = [
+  ...interests.map((group) => ({
+    name: group.label,
+    desc: group.items.join(' · '),
+    meta: group.en.toUpperCase(),
+  })),
+  {
+    name: '在玩',
+    desc: '正在玩的几款，链接都在。',
+    meta: 'PLAYING',
+  },
 ];
 ---
 
-<BaseLayout title="关于 — Aonzik" description="关于这个博客，以及写这些字的人。" active="about">
+<BaseLayout
+  title={titled('关于')}
+  description="川崎·杭汐（Aonzik Kawasaki）：计算机人工智能专业本科在读，折腾个人服务器与私有云，也写点吴越方言与二次元，分享些料理、音乐与摄影。"
+  active="about"
+>
   <main>
     <div class="container">
       <div class="about-hero">
@@ -67,13 +63,16 @@ const projects = [
             <Decor slot="about-hero-figure" />
           </div>
 
+          <p class="about-alias" data-reveal>{identity.aliasNote}。</p>
+
           <div class="contact-row" data-reveal>
-            <a class="btn btn-primary" href={site.links.email}>
+            <a class="btn btn-primary" href={site.links.email} aria-label={`邮箱：${site.author.email}`}>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2" /><path d="M22 6l-10 7L2 6" /></svg>
-              写邮件
+              <span class="email-obfuscated">{site.links.emailUser}</span>
             </a>
-            <a class="btn btn-ghost" href={site.links.github}>GitHub</a>
-            <a class="btn btn-ghost" href={site.links.rss}>RSS 订阅</a>
+            <a class="btn btn-ghost" href={site.links.github} target="_blank" rel="noopener noreferrer">GitHub</a>
+            <a class="btn btn-ghost" href={site.links.bilibili} target="_blank" rel="noopener noreferrer">Bilibili {identity.bilibili}</a>
+            <a class="btn btn-ghost" href={site.links.rss}>RSS</a>
           </div>
         </div>
 
@@ -82,7 +81,8 @@ const projects = [
             {site.markLetter}
             <Decor slot="profile-avatar-frame" />
           </div>
-          <p class="profile-name">{site.author.name}</p>
+          <p class="profile-name">{identity.zh}</p>
+          <p class="profile-en">{identity.en}</p>
           <p class="profile-role">{site.author.role}</p>
           <dl class="profile-facts">
             {
@@ -103,16 +103,18 @@ const projects = [
         <div class="about-grid">
           <div>
             <div class="section-head decor-host">
-              <h2>经历</h2>
+              <h2>研究线索</h2>
+              <span class="eyebrow">在推进的四件事</span>
               <Decor slot="section-ornament" />
             </div>
             <div class="timeline" data-reveal>
               {
-                timeline.map((item) => (
+                research.map((item) => (
                   <div class="timeline-item">
-                    <span class="timeline-year">{item.year}</span>
+                    <span class="timeline-year">{item.no}</span>
                     <p class="timeline-title">{item.title}</p>
                     <p class="timeline-desc">{item.desc}</p>
+                    <p class="timeline-meta">{item.meta}</p>
                   </div>
                 ))
               }
@@ -121,32 +123,40 @@ const projects = [
 
           <div>
             <div class="section-head decor-host">
-              <h2>在做的事</h2>
+              <h2>工具</h2>
+              <span class="eyebrow">常用的</span>
               <Decor slot="section-ornament" />
             </div>
-            <div class="skill-list decor-host" data-reveal>
+            <div class="tool-groups" data-reveal>
               {
-                skills.map((skill, index) => (
-                  <div class="skill-item">
-                    <div class="skill-header">
-                      <span class="skill-name">{skill.name}</span>
-                      <span class="skill-pct">占位 {skill.pct}%</span>
-                    </div>
-                    <div class="skill-track">
-                      <div class="skill-bar" data-pct={skill.pct}></div>
-                    </div>
-                    {index === 0 && <Decor slot="skill-tip" />}
+                stack.map((group) => (
+                  <div class="tool-group">
+                    <p class="tool-label">
+                      {group.label}
+                      <span>{group.en}</span>
+                    </p>
+                    <ul class="tool-chips" role="list">
+                      {group.items.map((item) =>
+                        item.href ? (
+                          <li>
+                            <a class="chip chip--link" href={item.href} target="_blank" rel="noopener noreferrer">{item.name}</a>
+                          </li>
+                        ) : (
+                          <li><span class="chip">{item.name}</span></li>
+                        )
+                      )}
+                    </ul>
                   </div>
                 ))
               }
             </div>
 
-            <div class="section-head decor-host">
-              <h2>关键词</h2>
+            <div class="section-head decor-host section-head--stacked">
+              <h2>个人标签</h2>
               <Decor slot="section-ornament" />
             </div>
             <ul class="tag-list" role="list" data-reveal>
-              {keywords.map((word) => <li><a class="tag" href="/tags/">{word}</a></li>)}
+              {personalTags.map((tag) => <li><span class="chip">{tag}</span></li>)}
             </ul>
           </div>
         </div>
@@ -156,17 +166,30 @@ const projects = [
     <section class="section section--tight">
       <div class="container">
         <div class="section-head decor-host">
-          <h2>做过的东西</h2>
+          <h2>兴趣</h2>
+          <span class="eyebrow">不务正业的部分</span>
           <Decor slot="section-ornament" />
         </div>
         <div class="project-grid">
           {
-            projects.map((project) => (
-              <a class="project-card" href="#" data-reveal>
-                <p class="project-name">{project.title}</p>
-                <p class="project-desc">一句话描述这个项目做了什么，解决了什么问题。后续补充真实内容。</p>
-                <p class="project-meta">{project.year} · 占位标签</p>
-              </a>
+            interestCards.map((card, index) => (
+              <div class="project-card" data-reveal>
+                <p class="project-name">{card.name}</p>
+                <p class="project-desc">{card.desc}</p>
+                {index === interestCards.length - 1 && (
+                  <ul class="card-links" role="list">
+                    {games.map((game) => (
+                      <li>
+                        <a href={game.href} target="_blank" rel="noopener noreferrer">
+                          {game.name}
+                          <span aria-hidden="true">↗</span>
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                <p class="project-meta">{card.meta}</p>
+              </div>
             ))
           }
         </div>
@@ -178,10 +201,10 @@ const projects = [
         <Decor slot="content-divider" />
         <div class="author-card" data-reveal>
           <p class="eyebrow">保持联系</p>
-          <p>如果这里的内容对你有用，欢迎写信聊聊。</p>
-          <a class="btn btn-primary" href={site.links.email}>
+          <p>想聊聊AI发展、二次元、吴越方言或者自建服务，都欢迎写信——Bilibili 也能找到我。</p>
+          <a class="btn btn-primary" href={site.links.email} aria-label={`邮箱：${site.author.email}`}>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /></svg>
-            发送邮件
+            <span class="email-obfuscated">{site.links.emailUser}</span>
           </a>
         </div>
       </div>

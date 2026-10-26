@@ -1,0 +1,105 @@
+# ============================================================================
+# 行尾与二进制约定 —— Aonzik Blog
+# ----------------------------------------------------------------------------
+# 开发在 Windows / macOS，部署在 Linux（nginx 直接读 dist/）。
+# 策略：**仓库里一律 LF**，检出到哪台机器都是 LF —— 本地看到的字节 = 服务器上的字节。
+# 唯一例外是只能在 Windows 上跑的脚本（.ps1 / .bat / .cmd），它们保留 CRLF。
+#
+# 这样做的理由：
+#   1. 避免 "works on my machine"：CRLF 混进 shell 脚本会在 Linux 上变成
+#      `/bin/sh^M: bad interpreter`；
+#   2. 避免整文件假改动：换一台机器就全文件 diff，review 时看不出真实修改；
+#   3. 本文件里的 eol 规则**优先级高于 core.autocrlf**，所以各人本机的
+#      git config 怎么设都不影响结果。
+#
+# 规则顺序有讲究：通用规则在前，特殊规则在后（后面的覆盖前面的）。
+# ============================================================================
+
+# ── 默认：所有文本一律 LF ────────────────────────────────────────────────────
+* text=auto eol=lf
+
+# ── 显式声明为文本（git 自动探测可能误判的类型）─────────────────────────────
+*.astro   text eol=lf
+*.md      text eol=lf
+*.mdx     text eol=lf
+*.mjs     text eol=lf
+*.cjs     text eol=lf
+*.js      text eol=lf
+*.jsx     text eol=lf
+*.ts      text eol=lf
+*.tsx     text eol=lf
+*.json    text eol=lf
+*.css     text eol=lf
+*.scss    text eol=lf
+*.html    text eol=lf
+*.xml     text eol=lf
+*.yml     text eol=lf
+*.yaml    text eol=lf
+*.toml    text eol=lf
+*.txt     text eol=lf
+*.svg     text eol=lf
+*.csv     text eol=lf
+*.gitignore    text eol=lf
+*.gitattributes text eol=lf
+
+# ── 在 Linux 上执行的脚本：必须是 LF ─────────────────────────────────────────
+*.sh      text eol=lf
+*.bash    text eol=lf
+*.zsh     text eol=lf
+# nginx 配置（服务器侧，即使不进仓库也先约定好）
+*.conf    text eol=lf
+
+# ── Windows 专用脚本：保留 CRLF ──────────────────────────────────────────────
+# （.bat/.cmd 用 LF 会在 cmd.exe 里出现诡异的行解析问题；.ps1 虽两种都吃，
+#   但和编辑器/Windows 工具链保持一致更省事）
+*.ps1     text eol=crlf
+*.bat     text eol=crlf
+*.cmd     text eol=crlf
+*.reg     text eol=crlf
+
+# ── 二进制：不做行尾转换，也不做文本 diff ────────────────────────────────────
+*.png     binary
+*.jpg     binary
+*.jpeg    binary
+*.gif     binary
+*.webp    binary
+*.avif    binary
+*.ico     binary
+*.bmp     binary
+*.tiff    binary
+*.psd     binary
+*.ai      binary
+*.pdf     binary
+
+*.woff    binary
+*.woff2   binary
+*.ttf     binary
+*.otf     binary
+*.eot     binary
+
+*.mp4     binary
+*.webm    binary
+*.mp3     binary
+*.wav     binary
+*.ogg     binary
+
+*.zip     binary
+*.gz      binary
+*.tar     binary
+*.br      binary
+*.zst     binary
+*.7z      binary
+*.rar     binary
+*.db      binary
+*.sqlite  binary
+
+# ── 自动生成、不需要人读 diff 的文件 ─────────────────────────────────────────
+# 锁文件：GitHub 会折叠它，但保留 diff 能力，出问题时还能查
+package-lock.json   linguist-generated=true
+# 构建产物与依赖本来就在 .gitignore 里，这里只是给误提交兜底
+dist/**             linguist-generated=true -diff
+node_modules/**     -diff
+
+# ── 文档目录：不参与语言统计 ─────────────────────────────────────────────────
+docs/**     linguist-documentation
+.handoff/** linguist-documentation

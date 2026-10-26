@@ -340,3 +340,65 @@ aonzik-blog/
 - RSS、邮件、社交链接为 `#` 占位。
 
 美术模板本身已完成且自洽，后续只需在既有结构里填充内容。
+
+---
+
+## 13. 2026 改版：署名、个人主页与反套话清单
+
+> 本节由 Astro 版改版时补写。第 1–12 节描述的是最初的静态 HTML 版（`index.html` / `styles/*.css` / `scripts/main.js`）；
+> 现在样式拆到 `src/styles/`，页面是 `src/pages/*.astro`，`.skill-bar` 等关于页占位组件已停用（类还在，没人用了）。
+
+### 13.1 署名与页面标题
+
+内容来源只有一份：`docs/bio.md`。代码里分两层：
+
+| 文件 | 管什么 |
+|------|--------|
+| `src/lib/site.ts` | 品牌、导航、页脚、社交链接、`title` / `description` |
+| `src/lib/profile.ts` | 身份、标签、简介、研究线索、工具栈、兴趣、游戏链接 |
+
+- `site.name` = `Aonzik Kawasaki`（版权行、og:site_name、RSS 用全名）
+- `site.brand` = `Aonzik`（导航与页脚 logo 旁的短名）
+- `site.zhName` = `川崎·杭汐`（导航品牌右侧 `.nav-brand-sub`，≤768px 隐藏）
+- 页面标题一律走 `titled(label)` → `<label> — Aonzik Kawasaki`。**不要在页面里手写 `— Aonzik`**，那是改版前的旧格式。
+
+### 13.2 首页（`src/pages/index.astro` + `src/styles/page-home.css`）
+
+从「通用博客落地页」改成「扉页」。顺序：
+
+1. **扉页** `.home-hero`：报头 `.home-hero__masthead`（朱砂圆点 + 个人站点 / 地点 / 状态）→ 两行标题 `.hero-title`（复用全局字阶，覆盖为 `clamp(2.5rem, 5.6vw, 4.9rem)`）→ 别名行 `.home-hero__alias`（汉字名 + `/` + 拉丁名）→ `.hero-desc` → CTA → 五个 `.chip` 身份标签。
+2. **右侧竖排名** `.home-hero__rail`：`writing-mode: vertical-rl` 的「川崎·杭汐」+ 朱砂印章 `.home-hero__seal`（2px 朱砂边 + `--accent-soft` 底 + `rotate(-3deg)` + `text-orientation: upright`）。纯装饰，`aria-hidden`，**≤900px 直接 `display:none`**（别名行已经写了名字）。
+3. **版本记录** `.colophon`：四栏 `dl`（现居 / 语言 / 专业 / 状态），`rule-strong` 上边线，≤900px 两栏。
+4. 正文五节：`01 现在`（`.now-item` 三行清单，不用卡片）→ `02 精选` → `03 最新` → `04 兴趣`（`.interest-grid` 三组 + `.game-row` 外链）→ `05 话题`。
+
+**小节编号**：`<h2><span class="section-no">01</span>现在</h2>`。编号用 mono + `ink-faint`，
+**不要**换成朱砂——`.section-head h2::before` 已经有一条朱砂短线，两个红点会互相抢。
+
+### 13.3 关于页
+
+- 简介 4 段、研究线索 4 条（mono 编号 `01`–`04`，复用全局 `.timeline`）、工具栈三组 `.chip`、个人标签五个 `.chip`、兴趣四卡（`.project-card`，末卡带 `.card-links` 游戏外链）。
+- **不再有技能百分比条**：`.skill-pct` / `.skill-track` 那套没有数据支撑，是「公式化」的源头，已从页面移除。
+- `.author-card` 是横排 flex（`align-items: flex-start`），只放三件东西：眉标 / 一句话 / 一个按钮。**不要在里面塞一个按钮组**，会挤成三列。
+
+### 13.4 新增的通用件
+
+| 类 | 位置 | 说明 |
+|----|------|------|
+| `.chip` | components.css | 纯展示的小标签，无 hover，比 `.tag` 淡一档；链接版加 `.chip--link` |
+| `.nav-brand-sub` | components.css | 导航品牌右侧的中文名，`≤768px` 隐藏 |
+| `.email-obfuscated` | components.css | 可见文本只写 `aonzik_koo`，`::after{content:"@foxmail.com"}` 拼出域名；`href` 与 `aria-label` 写全 |
+
+### 13.5 社交
+
+- 只有三个真链接：GitHub、Bilibili、RSS（外加 `mailto:`）。Twitter / X 的 `#` 占位已删除。
+- Bilibili 图标是手绘 stroke TV（`rect` + 天线 `path` + 两个眼点），24×24 网格，`stroke-width` 1.8。
+- 页脚「联系」栏的邮件链接直接显示地址（靠 `.email-obfuscated`）。
+
+### 13.6 验证方式
+
+```bash
+npm run build && npm run check
+```
+
+改版时实测：1440 / 768 / 390 三档下首页与关于页均无横向溢出（`documentElement.scrollWidth` ≤ 视口宽）；
+亮暗两色下印章取 `#a8442a` / `#dd7a53`，印章底取 `--accent-soft`。

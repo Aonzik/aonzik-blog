@@ -18,11 +18,12 @@ const { active = null } = Astro.props;
 <nav class="site-nav" aria-label="主导航">
   <div class="container">
     <div class="nav-inner">
-      <a class="nav-brand decor-host" href="/" aria-label="Aonzik 首页">
+      <a class="nav-brand decor-host" href="/" aria-label={`${site.name} 首页`}>
         <span class="nav-brand-mark" aria-hidden="true">
           <svg viewBox="0 0 16 16"><path d="M3 12 L8 2 L13 12 M5.5 8 H10.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none" /></svg>
         </span>
-        <span class="nav-brand-name">{site.name}</span>
+        <span class="nav-brand-name">{site.brand}</span>
+        <span class="nav-brand-sub" aria-hidden="true">{site.zhName}</span>
         <Decor slot="nav-brand-mascot" />
       </a>
 

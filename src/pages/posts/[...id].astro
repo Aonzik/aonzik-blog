@@ -24,7 +24,7 @@ import {
   sortPosts,
   tagPath,
 } from '../../lib/posts';
-import { site } from '../../lib/site';
+import { site, titled } from '../../lib/site';
 
 export async function getStaticPaths() {
   const posts = published(await getCollection('posts'));
@@ -45,7 +45,7 @@ const tocItems = headings.filter((heading) => heading.depth === 2 || heading.dep
 ---
 
 <BaseLayout
-  title={`${post.data.title} — ${site.name}`}
+  title={titled(post.data.title)}
   description={post.data.description}
   active="blog"
   ogType="article"

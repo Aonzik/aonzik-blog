@@ -10,6 +10,7 @@ import type { GetStaticPaths } from 'astro';
 import { getCollection } from 'astro:content';
 import BlogList from '../../components/BlogList.astro';
 import { PAGE_SIZE, published, sortPosts } from '../../lib/posts';
+import { titled } from '../../lib/site';
 
 export const getStaticPaths = (async ({ paginate }) => {
   const posts = sortPosts(published(await getCollection('posts')));
@@ -21,7 +22,7 @@ const allPosts = sortPosts(published(await getCollection('posts')));
 ---
 
 <BaseLayout
-  title="文章 — Aonzik"
+  title={titled('文章')}
   description="所有文章列表，涵盖技术、随笔、阅读笔记等分类。"
   active="blog"
 >

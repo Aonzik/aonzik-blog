@@ -67,6 +67,17 @@
   line-height: 1;
 }
 
+/* 品牌右侧的中文名：一道竖线隔开，等宽小字 */
+.nav-brand-sub {
+  padding-left: var(--sp-3);
+  border-left: 1px solid var(--rule);
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+  color: var(--ink-faint);
+  line-height: 1;
+}
+
 /* 导航链接 */
 .nav-links {
   display: flex;
@@ -530,6 +541,21 @@
   flex-wrap: wrap;
   gap: var(--sp-2);
   list-style: none;
+}
+
+/* 纯展示的小标签（非链接，比 .tag 更淡一档） */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 11px;
+  font-size: var(--fs-xs);
+  font-weight: 450;
+  letter-spacing: 0.06em;
+  color: var(--ink-faint);
+  background: color-mix(in srgb, var(--paper-raised) 70%, transparent);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-pill);
+  white-space: nowrap;
 }
 
 /* ============================================================
@@ -1252,4 +1278,14 @@
   border-radius: var(--radius-pill);
   width: 0;
   transition: width 1200ms var(--ease-out);
+}
+
+/* ============================================================
+   工具类
+   ============================================================ */
+
+/* 邮件地址防抓取：可见文本只写前半段，@ 域名由 CSS 拼上
+   （href 仍是完整 mailto，aria-label 也写全，读屏器不受影响） */
+.email-obfuscated::after {
+  content: "@foxmail.com";
 }

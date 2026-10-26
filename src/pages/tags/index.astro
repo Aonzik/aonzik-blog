@@ -15,7 +15,7 @@ import {
   tagCounts,
   tagPath,
 } from '../../lib/posts';
-import { CATEGORY_ORDER } from '../../lib/site';
+import { CATEGORY_ORDER, titled } from '../../lib/site';
 
 const posts = sortPosts(published(await getCollection('posts')));
 const categories = categoryCounts(posts, CATEGORY_ORDER);
@@ -25,7 +25,7 @@ const topicTotal =
   new Set([...categories.map((entry) => entry.name), ...tags.map((entry) => entry.tag)]).size;
 ---
 
-<BaseLayout title="标签 — Aonzik" description="按分类与标签浏览全部文章。" active="blog">
+<BaseLayout title={titled('标签')} description="按分类与标签浏览全部文章。" active="blog">
   <main>
     <div class="container">
       <div class="page-banner" data-reveal>

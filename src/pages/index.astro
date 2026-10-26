@@ -1,8 +1,10 @@
 ---
 /**
- * 首页 —— 结构逐字复刻原稿 index.html（hero → 精选 → 最新 → 话题 → 页脚）。
- * 内容改为真实数据：精选 = frontmatter featured 的那篇，最新 = 其余中最新 3 篇。
- * 原文案里所有「占位」字样都换成真实数据后自然消失。
+ * 首页 —— 个人主页（不再是通用的「博客落地页」模板）。
+ *
+ * 版面顺序：扉页（masthead / 竖排名 / 印章 / 版本记录 colophon）
+ *   → 01 现在 → 02 精选 → 03 最新 → 04 兴趣 → 05 话题。
+ * 人物文案来自 docs/bio.md（见 src/lib/profile.ts），文章数据来自 content collections。
  */
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
@@ -10,49 +12,134 @@ import Decor from '../components/Decor.astro';
 import PostCard from '../components/PostCard.astro';
 import { published, sortPosts, tagPath } from '../lib/posts';
 import { heroTags, site } from '../lib/site';
+import { games, identity, interests, personalTags, sectionNo } from '../lib/profile';
+import '../styles/page-home.css';
 
 const posts = sortPosts(published(await getCollection('posts')));
 const featured = posts.find((post) => post.data.featured) ?? posts[0];
 const latest = posts.filter((post) => post.id !== featured.id).slice(0, 3);
+
+/** 现在在做的事：bio.md 的三条线索 */
+const now = [
+  {
+    title: '基于大语言模型的开源聊天机器人',
+    desc: '手上主要的项目。先把对话做顺，再往上加多模态交互与自主 Agent 机制——目标是它不只回答问题，还能把事情做完。',
+    tags: ['LLM', '多模态', 'Agent'],
+  },
+  {
+    title: '全栈开发与个人服务器',
+    desc: '在全栈这条路上补课，也热衷于个人服务器自建服务与私有云生态的探索——数据与服务，尽量都放在自己手里。',
+    tags: ['全栈', '自建服务', '私有云'],
+  },
+  {
+    title: '这个站点本身',
+    desc: '纸、墨与一点朱砂。设计先用着 Opus5.5 跑的美术样板，文字还是得自己来；写得慢，但每改一次都更像自己。',
+    tags: ['文字', '设计'],
+  },
+];
+
+/** 版本记录：扉页下方的一行事实 */
+const colophon = [
+  { label: '现居', value: identity.city },
+  { label: '语言', value: identity.languages },
+  { label: '专业', value: `${identity.major} · 本科在读` },
+  { label: '状态', value: identity.status },
+];
 ---
 
 <BaseLayout title={site.title} description={site.description} active="home">
-  <header class="hero decor-host">
+  <header class="hero home-hero decor-host">
     <div class="container">
-      <div class="hero-inner decor-host">
-        <span class="hero-tag decor-host" data-reveal>
-          个人博客 · 持续更新中
-          <Decor slot="hero-badge" as="span" />
-        </span>
+      <div class="home-hero__grid">
+        <div class="home-hero__main">
+          <p class="home-hero__masthead" data-reveal>
+            <span class="home-hero__dot" aria-hidden="true"></span>
+            <span>个人站点</span>
+            <span class="home-hero__sep" aria-hidden="true">/</span>
+            <span>Hangchow, Chekiang</span>
+            <span class="home-hero__sep" aria-hidden="true">/</span>
+            <span>{identity.status}</span>
+          </p>
 
-        <h1 class="hero-title decor-host" data-reveal>
-          写下<em>思考</em>，<br />留住此刻。
-          <Decor slot="hero-title-corner" as="span" />
-        </h1>
+          <h1 class="hero-title home-hero__title" data-reveal>
+            用代码做事，<br />用<em>方言</em>记事。
+          </h1>
 
-        <p class="hero-desc" data-reveal>
-          这里记录技术探索、阅读笔记与日常感悟。<br />内容持续更新，欢迎常来看看。
-        </p>
+          <p class="home-hero__alias" data-reveal>
+            <span class="home-hero__alias-zh">{identity.zh}</span>
+            <span class="home-hero__alias-en">{identity.en}</span>
+          </p>
 
-        <div class="hero-cta decor-host" data-reveal>
-          <a class="btn btn-primary" href="/blog/">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /></svg>
-            浏览文章
-          </a>
-          <a class="btn btn-ghost" href="/about/">了解我</a>
-          <Decor slot="hero-cta-tail" />
+          <p class="hero-desc" data-reveal>
+            计算机人工智能专业本科在读，兴趣在自然语言处理与计算机视觉；<br />
+            也爱二次元文化、江浙吴越的方言，和日本的文字。
+          </p>
+
+          <div class="hero-cta" data-reveal>
+            <a class="btn btn-primary" href={site.links.email}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2" /><path d="M22 6l-10 7L2 6" /></svg>
+              写邮件
+            </a>
+            <a class="btn btn-ghost" href={site.links.github} target="_blank" rel="noopener noreferrer">GitHub</a>
+            <a class="btn btn-ghost" href={site.links.bilibili} target="_blank" rel="noopener noreferrer">Bilibili</a>
+          </div>
+
+          <ul class="home-hero__tags" role="list" data-reveal>
+            {personalTags.map((tag) => <li class="chip">{tag}</li>)}
+          </ul>
         </div>
 
-        <Decor slot="hero-sprite" />
+        <aside class="home-hero__rail" aria-hidden="true">
+          <span class="home-hero__vertical">{identity.zh}</span>
+          <span class="home-hero__seal">{identity.seal}</span>
+          <span class="home-hero__rail-note">AONZIK</span>
+        </aside>
       </div>
+
+      <dl class="colophon" data-reveal>
+        {
+          colophon.map((fact) => (
+            <div class="colophon__item">
+              <dt>{fact.label}</dt>
+              <dd>{fact.value}</dd>
+            </div>
+          ))
+        }
+      </dl>
     </div>
     <Decor slot="hero-ground" />
   </header>
 
+  <section class="section section--tight">
+    <div class="container">
+      <div class="section-head decor-host">
+        <h2><span class="section-no">{sectionNo(1)}</span>现在</h2>
+        <span class="eyebrow">三条线索</span>
+        <Decor slot="section-ornament" />
+      </div>
+      <div class="now-list">
+        {
+          now.map((item, index) => (
+            <article class="now-item" data-reveal>
+              <span class="now-no">{sectionNo(index + 1)}</span>
+              <div>
+                <p class="now-title">{item.title}</p>
+                <p class="now-desc">{item.desc}</p>
+                <ul class="now-tags" role="list">
+                  {item.tags.map((tag) => <li>{tag}</li>)}
+                </ul>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
   <section class="section">
     <div class="container">
       <div class="section-head decor-host">
-        <h2>精选</h2>
+        <h2><span class="section-no">{sectionNo(2)}</span>精选</h2>
         <a class="eyebrow link-underline" href="/blog/">全部文章 →</a>
         <Decor slot="section-ornament" />
       </div>
@@ -63,7 +150,7 @@ const latest = posts.filter((post) => post.id !== featured.id).slice(0, 3);
   <section class="section section--tight">
     <div class="container">
       <div class="section-head decor-host">
-        <h2>最新</h2>
+        <h2><span class="section-no">{sectionNo(3)}</span>最新</h2>
         <a class="eyebrow link-underline" href="/blog/">更多 →</a>
         <Decor slot="section-ornament" />
       </div>
@@ -77,7 +164,46 @@ const latest = posts.filter((post) => post.id !== featured.id).slice(0, 3);
     <div class="container">
       <Decor slot="content-divider" />
       <div class="section-head decor-host">
-        <h2>话题</h2>
+        <h2><span class="section-no">{sectionNo(4)}</span>兴趣</h2>
+        <span class="eyebrow">不务正业的部分</span>
+        <Decor slot="section-ornament" />
+      </div>
+      <div class="interest-grid" data-reveal>
+        {
+          interests.map((group) => (
+            <div class="interest-group">
+              <p class="interest-label">
+                {group.label}
+                <span>{group.en}</span>
+              </p>
+              <p class="interest-body">{group.items.join(' · ')}</p>
+            </div>
+          ))
+        }
+      </div>
+      <div class="game-row" data-reveal>
+        <span class="game-row__label">在玩</span>
+        <ul class="game-list" role="list">
+          {
+            games.map((game) => (
+              <li>
+                <a href={game.href} target="_blank" rel="noopener noreferrer">
+                  {game.name}
+                  <span aria-hidden="true">↗</span>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tight">
+    <div class="container">
+      <div class="section-head decor-host">
+        <h2><span class="section-no">{sectionNo(5)}</span>话题</h2>
+        <a class="eyebrow link-underline" href="/tags/">全部话题 →</a>
         <Decor slot="section-ornament" />
       </div>
       <ul class="tag-list" role="list" data-reveal>

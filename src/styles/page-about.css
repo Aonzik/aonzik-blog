@@ -154,3 +154,113 @@
       gap: var(--sp-3);
       margin-top: var(--sp-5);
     }
+
+    /* ---- 2026 改版新增 -------------------------------------- */
+
+    /* 名字来历：一行小注 */
+    .about-alias {
+      margin-top: var(--sp-4);
+      font-family: var(--font-mono);
+      font-size: var(--fs-xs);
+      letter-spacing: 0.08em;
+      color: var(--ink-faint);
+    }
+
+    /* 名片里的拉丁名 */
+    .profile-en {
+      font-family: var(--font-mono);
+      font-size: var(--fs-xs);
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+      margin-top: calc(var(--sp-2) * -1);
+    }
+
+    /* 研究线索的标签行 */
+    .timeline-meta {
+      font-family: var(--font-mono);
+      font-size: var(--fs-xs);
+      letter-spacing: 0.06em;
+      color: var(--ink-faint);
+    }
+
+    /* 两个 section-head 叠在同一栏时，第二条需要上间距 */
+    .section-head--stacked {
+      margin-top: var(--sp-7);
+    }
+
+    /* 工具栈：分组 + chip */
+    .tool-groups {
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-5);
+    }
+
+    .tool-label {
+      display: flex;
+      align-items: baseline;
+      gap: var(--sp-2);
+      font-size: var(--fs-sm);
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      color: var(--ink);
+    }
+
+    .tool-label span {
+      font-family: var(--font-mono);
+      font-size: var(--fs-xs);
+      font-weight: 400;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+    }
+
+    .tool-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--sp-2);
+      list-style: none;
+      margin-top: var(--sp-3);
+    }
+
+    .chip--link {
+      transition: border-color var(--dur) var(--ease),
+                  color var(--dur) var(--ease),
+                  background var(--dur) var(--ease);
+    }
+
+    .chip--link:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--accent-soft);
+    }
+
+    /* 兴趣卡里的外链行 */
+    .card-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--sp-1) var(--sp-4);
+      list-style: none;
+      margin-top: var(--sp-3);
+      font-size: var(--fs-sm);
+    }
+
+    .card-links a {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 0.25em;
+      color: var(--ink-soft);
+      border-bottom: 1px solid var(--rule);
+      transition: color var(--dur) var(--ease),
+                  border-color var(--dur) var(--ease);
+    }
+
+    .card-links a span {
+      font-size: 0.8em;
+      color: var(--ink-faint);
+    }
+
+    .card-links a:hover {
+      color: var(--accent);
+      border-color: currentColor;
+    }

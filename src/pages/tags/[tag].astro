@@ -9,7 +9,7 @@ import '../../styles/page-blog.css';
 import { getCollection } from 'astro:content';
 import BlogList from '../../components/BlogList.astro';
 import { published, sortPosts, topicNames, topicPosts } from '../../lib/posts';
-import { CATEGORY_ORDER } from '../../lib/site';
+import { CATEGORY_ORDER, titled } from '../../lib/site';
 
 export async function getStaticPaths() {
   const posts = sortPosts(published(await getCollection('posts')));
@@ -27,7 +27,7 @@ const isCategory = CATEGORY_ORDER.includes(name);
 ---
 
 <BaseLayout
-  title={`${name} — Aonzik`}
+  title={titled(name)}
   description={`话题「${name}」下的全部文章列表。`}
   active="blog"
 >

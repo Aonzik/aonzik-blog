@@ -8,6 +8,7 @@ import '../styles/page-blog.css';
 
 import Decor from '../components/Decor.astro';
 import { DECOR_MODES, DECOR_MODE_LABEL, decorSlots, type DecorMode, type DecorSlotKind } from '../lib/decorations';
+import { titled } from '../lib/site';
 
 const shortLabel: Record<DecorMode, string> = { on: '显示', off: '关闭', debug: '调试' };
 
@@ -21,7 +22,7 @@ const groups: { kind: DecorSlotKind; title: string; note: string }[] = [
 ---
 
 <BaseLayout
-  title="装饰位 — Aonzik"
+  title={titled('装饰位')}
   description="博克里为二次元装饰预留的全部位置：名称、位置、建议尺寸与画图提示。"
   active="home"
 >

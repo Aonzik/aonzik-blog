@@ -1,8 +1,8 @@
 /**
- * 全站站点级配置：品牌、导航、页脚、作者信息。
+ * 全站站点级配置：品牌、导航、页脚、社交链接。
  *
- * 文案来源：原站 index/blog/post/about 四个 HTML 中逐字提取（见 .handoff/content-extract.md），
- * 除「新增页面入口」（标签 / 装饰位）外不得改写任何一个字。
+ * 人物资料（名字来历、标签、研究线索、工具栈、兴趣）在 src/lib/profile.ts，
+ * 内容唯一来源是 docs/bio.md。
  */
 
 export interface NavItem {
@@ -11,14 +11,14 @@ export interface NavItem {
   href: string;
 }
 
-/** 主导航：与原稿完全一致的 3 项（首页 / 文章 / 关于） */
+/** 主导航：首页 / 文章 / 关于 */
 export const nav: NavItem[] = [
   { key: 'home', label: '首页', href: '/' },
   { key: 'blog', label: '文章', href: '/blog/' },
   { key: 'about', label: '关于', href: '/about/' },
 ];
 
-/** 页脚「导航」栏：原稿 3 项 + 两个新增页面的入口（标签、装饰位） */
+/** 页脚「导航」栏：主导航 + 标签、装饰位 */
 export const footerNav = [
   { label: '首页', href: '/' },
   { label: '文章', href: '/blog/' },
@@ -27,13 +27,13 @@ export const footerNav = [
   { label: '装饰位', href: '/decor/' },
 ];
 
-/** 页脚「分类」栏：原稿标签，链接由 blog.html 指向 /tags/<标签>/（行为增强，样式不变） */
+/** 页脚「分类」栏：链接指向 /tags/<分类>/ */
 export const footerCategories = ['技术', '随笔', '阅读', '设计'];
 
-/** 分类的固定顺序：原稿筛选条与侧栏计数的顺序（技术 / 随笔 / 阅读 / 设计 / 生活） */
+/** 分类的固定顺序（技术 / 随笔 / 阅读 / 设计 / 生活） */
 export const CATEGORY_ORDER = ['技术', '随笔', '阅读', '设计', '生活'];
 
-/** 首页话题标签云（原稿 8 个标签） */
+/** 首页话题标签云：内容里真实存在的 8 个标签 */
 export const heroTags = [
   '技术',
   '随笔',
@@ -46,38 +46,47 @@ export const heroTags = [
 ];
 
 export const site = {
-  name: 'Aonzik',
+  /** 全名（版权行、og:site_name、RSS 用） */
+  name: 'Aonzik Kawasaki',
+  /** 导航栏 / 页脚 logo 旁的短名 */
+  brand: 'Aonzik',
+  /** 中文名 */
+  zhName: '川崎·杭汐',
   /** 品牌 mark 里的字母（导航与页脚 logo 同款描边字） */
   markLetter: 'A',
   lang: 'zh-CN',
-  /** 首页 <title> / description：原稿文案 */
-  title: 'Aonzik — 个人博客',
-  description: '记录思考、技术与生活的个人博客。',
+  /** 首页 <title> / description */
+  title: 'Aonzik Kawasaki — 川崎·杭汐的个人博客',
+  description:
+    '川崎·杭汐（Aonzik Kawasaki）：计算机人工智能专业本科在读，做基于大语言模型的聊天机器人，折腾个人服务器与私有云，也写二次元文化与江浙吴越的方言。',
   author: {
-    name: 'Aonzik',
-    role: 'Developer / Writer',
-    /** 文章页作者卡原文 */
-    bio: '写代码，也写字。关注设计、技术与生活的交叉地带。 这个博客用来记录那些值得留下的想法。',
-    email: 'hi@aonzik.com',
+    name: 'Aonzik Kawasaki',
+    zhName: '川崎·杭汐',
+    role: 'AI Student / Developer',
+    /** 文章页作者卡 */
+    bio: '计算机人工智能专业本科在读。做基于大语言模型的聊天机器人，也在补全栈、折腾个人服务器与私有云；闲下来时在方言、二次元与城市里乱走。',
+    email: 'aonzik_koo@foxmail.com',
   },
-  /** 页脚标语原文 */
-  footerTagline: '记录思考、技术与生活，文字是留存时光的方式。',
+  /** 页脚标语 */
+  footerTagline: '在代码与方言之间，留一点记录。',
   footerCopyTail: '内容遵循 CC BY 4.0 协议。',
-  social: {
-    github: '#',
-    twitter: '#',
-    rss: '/rss.xml',
-  },
   links: {
-    email: 'mailto:hi@aonzik.com',
-    github: '#',
-    twitter: '#',
+    email: 'mailto:aonzik_koo@foxmail.com',
+    /** 邮件正文里只拼出 aonzik_koo 这一半，@foxmail.com 由 CSS 补上，见 components.css */
+    emailUser: 'aonzik_koo',
+    github: 'https://github.com/Aonzik',
+    bilibili: 'https://space.bilibili.com/349364610',
     rss: '/rss.xml',
     feed: '/rss.xml',
   },
 } as const;
 
-/** 页脚版权行：年份取构建年份（原稿为 2025） */
+/** 内页标题：`标签 — Aonzik Kawasaki` */
+export function titled(label: string): string {
+  return `${label} — ${site.name}`;
+}
+
+/** 页脚版权行：年份取构建年份 */
 export function copyrightYear(now = new Date()): number {
   return now.getFullYear();
 }
