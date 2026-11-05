@@ -813,6 +813,12 @@
 .prose img {
   border-radius: 2px;
   border: 1px solid var(--rule);
+}
+
+/* 默认占满纸面宽度。但 CSS 声明会盖掉 HTML 的 width 属性，
+   所以对作者显式写了 width="40%" 这类尺寸的图片让出控制权，
+   否则插图一律被拉成整栏宽。 */
+.prose img:not([width]) {
   width: 100%;
 }
 
