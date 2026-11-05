@@ -8,10 +8,14 @@
  * 样式加载顺序刻意与原稿一致：tokens → base → components → responsive → decorations，
  * 页面自己的 page-*.css 由页面 import（Vite 保证 layout 先于 page），
  * 因此页面局部规则的层叠位置与原来写在页内 <style> 时完全相同。
+ * 数学公式：katex 的排版 CSS 最先加载，math.css 紧跟 components.css，
+ * 这样公式样式能被 responsive / decorations / page-*.css 正常覆盖。
  */
+import 'katex/dist/katex.min.css';
 import '../styles/tokens.css';
 import '../styles/base.css';
 import '../styles/components.css';
+import '../styles/math.css';
 import '../styles/responsive.css';
 import '../styles/decorations.css';
 

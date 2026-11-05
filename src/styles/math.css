@@ -1,0 +1,58 @@
+/* ============================================================
+   Aonzik Blog — 数学公式（KaTeX）
+   ---------------------------------------------------------------------------
+   KaTeX 的排版样式由 katex/dist/katex.min.css 提供，这里只补三件事：
+   1. 让公式跟随纸墨配色（KaTeX 本身不写颜色，继承 currentColor）
+   2. 行间公式在窄屏 / 长公式时横向滚动，不撑破正文的 720px 纸面
+   3. 数学模式里的中文（原稿有「、为瑕点」这类写法）回落到正文字体，
+      否则 KaTeX 主字体缺字会显示成豆腐块
+   ============================================================ */
+
+.prose .katex {
+  color: var(--ink);
+  font-size: 1.03em;
+}
+
+/* 行间公式：块级 + 可横向滚动 + 上下留白，接近原稿「一条硬公式独占一行」的观感 */
+.prose .katex-display {
+  display: block;
+  margin: 1.5em 0;
+  padding: 0.15em 0 0.35em;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: thin;
+}
+
+.prose .katex-display > .katex {
+  /* 让公式保持单行不折行，宽度超出时由外层滚动，而不是把纸面撑宽 */
+  white-space: nowrap;
+}
+
+/* 窄屏：公式两侧不再额外缩进，把有限宽度都留给公式本身 */
+@media (max-width: 640px) {
+  .prose .katex-display {
+    margin-inline: 0;
+  }
+}
+
+/* 数学模式里的中文与全角符号：用正文字族兜底，避免 KaTeX 字体缺字 */
+.prose .katex .cjk,
+.prose .katex .cjk_fallback {
+  font-family: var(--font-sans);
+  font-style: normal;
+}
+
+/* \text{...} 里的中文同样走正文字族 */
+.prose .katex .mord.text {
+  font-family: inherit;
+}
+
+/* 解析失败的公式（throwOnError: false → span.katex-error）：用朱砂色标出来，
+   顺手给个等宽字体，方便日后定位是哪一条写坏了 */
+.prose .katex-error {
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
