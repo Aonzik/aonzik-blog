@@ -3,6 +3,9 @@ import { defineConfig } from 'astro/config';
 import { unified } from '@astrojs/markdown-remark';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
+import remarkChartEmbed from './src/lib/remark-chart-embed.mjs';
+import remarkBoldFallback from './src/lib/remark-bold-fallback.mjs';
+import rehypeTableScroll from './src/lib/rehype-table-scroll.mjs';
 
 // 部署前把 site 改成正式域名（RSS / 站点地图 / 绝对链接会用到它）。
 const SITE = process.env?.SITE_URL ?? 'https://aonzik.example.com';
@@ -29,8 +32,19 @@ export default defineConfig({
     // 不能直接跑 rehype-katex；这里显式声明 unified 处理器（@astrojs/markdown-remark），
     // 与 Sätteri 的默认特性（GFM / smartypants）保持一致。
     processor: unified({
-      remarkPlugins: [remarkMath],
+      // 图表占位符 `<figure data-chart="…">` 在 remark-math 之前换成片段即可：
+      // 图表里没有数学公式，两个插件互不干扰（见 src/lib/remark-chart-embed.mjs）。
+      remarkPlugins: [
+        remarkChartEmbed,
+        // 中文里「**术语（英文）**」这种写法的闭合 ** 会因「前后都是标点/汉字」
+        // 而不满足 CommonMark 的 right-flanking 条件，整段粗体渲染失败。
+        // 这个插件只补残留的 `**…**`，不动任何已经解析成功的强调。
+        remarkBoldFallback,
+        remarkMath,
+      ],
       rehypePlugins: [
+        // 宽表格套滚动容器，避免手机上整页横向滚动（见 src/lib/rehype-table-scroll.mjs）。
+        rehypeTableScroll,
         [
           rehypeKatex,
           {

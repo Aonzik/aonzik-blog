@@ -1,0 +1,19 @@
+<div class="ch-header"><p class="ch-title">一个交易日的六个时段：什么时候能撤单，什么时候只能干看</p><p class="ch-lede">A 股一天并不都在连续撮合。开盘价和收盘价都是「集合竞价」一次性撮出来的，其中两段窗口一旦进去就撤不了单。</p></div>
+<div class="ch-session-bar" role="img" aria-label="交易日时段比例：09:15-09:20 与 09:20-09:25 各 5 分钟集合竞价，09:30-11:30 连续竞价 120 分钟，11:30-13:00 午间休市 90 分钟，13:00-14:57 连续竞价 117 分钟，14:57-15:00 收盘集合竞价 3 分钟">
+<span class="ch-session-seg ch-session-seg--auction" data-min="5"></span>
+<span class="ch-session-seg ch-session-seg--locked" data-min="5"></span>
+<span class="ch-session-seg ch-session-seg--trade" data-min="120"></span>
+<span class="ch-session-seg ch-session-seg--rest" data-min="90"></span>
+<span class="ch-session-seg ch-session-seg--trade" data-min="117"></span>
+<span class="ch-session-seg ch-session-seg--locked" data-min="3"></span>
+</div>
+<div class="ch-session-legend"><span class="ch-legend-item"><span class="ch-swatch ch-swatch--auction"></span>可撤单竞价</span><span class="ch-legend-item"><span class="ch-swatch ch-swatch--locked"></span>不可撤单竞价</span><span class="ch-legend-item"><span class="ch-swatch ch-swatch--trade"></span>连续竞价</span><span class="ch-legend-item"><span class="ch-swatch ch-swatch--rest"></span>休市</span></div>
+<div class="ch-session-rows">
+<div class="ch-session-row"><span class="ch-time-badge">09:15–09:20</span><span class="ch-session-name">集合竞价 · 挂单可以撤回<em class="ch-session-dur">5 分钟</em></span><span class="ch-session-flag ch-flag-soft">可撤单</span></div>
+<div class="ch-session-row"><span class="ch-time-badge">09:20–09:25</span><span class="ch-session-name">集合竞价 · 撮出全天唯一开盘价<em class="ch-session-dur">5 分钟</em></span><span class="ch-session-flag ch-flag-solid">不可撤</span></div>
+<div class="ch-session-row"><span class="ch-time-badge">09:30–11:30</span><span class="ch-session-name">前市连续竞价 · 价格优先、时间优先<em class="ch-session-dur">120 分钟</em></span><span class="ch-session-flag ch-flag-mute">撮合中</span></div>
+<div class="ch-session-row"><span class="ch-time-badge">11:30–13:00</span><span class="ch-session-name">午间休市 · 不撮合（部分券商可缓存挂单）<em class="ch-session-dur">90 分钟</em></span><span class="ch-session-flag ch-flag-mute">休市</span></div>
+<div class="ch-session-row"><span class="ch-time-badge">13:00–14:57</span><span class="ch-session-name">后市连续竞价 · 全天成交最密集的时段<em class="ch-session-dur">117 分钟</em></span><span class="ch-session-flag ch-flag-mute">撮合中</span></div>
+<div class="ch-session-row"><span class="ch-time-badge">14:57–15:00</span><span class="ch-session-name">收盘集合竞价 · 锁定全天收盘价<em class="ch-session-dur">3 分钟</em></span><span class="ch-session-flag ch-flag-solid">不可撤</span></div>
+</div>
+<p class="ch-micro">那条比例尺是按真实分钟数画的：一天 340 分钟里，真正能自由撤单的只有开盘前那 5 分钟。9:19:59 撤单的「虚假大单」就发生在这里。</p>

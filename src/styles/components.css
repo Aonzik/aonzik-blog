@@ -869,6 +869,14 @@
   border-bottom-color: var(--rule-strong);
 }
 
+/* 列多的表格在窄屏上比正文栏还宽（表格最小内容宽度由最长单元格决定，
+   width:100% 压不下去）。外面套一层滚动容器：桌面看不出区别，手机上表格
+   自己横向滑动，而不是整页跟着横向滚动。容器由 rehype-table-scroll.mjs 生成。 */
+.prose .table-scroll {
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
 /* 文章头信息 */
 .post-header {
   display: flex;

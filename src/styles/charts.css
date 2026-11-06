@@ -1,0 +1,1322 @@
+/* ==========================================================================
+   图表内嵌组件 .chart-embed
+   --------------------------------------------------------------------------
+   把手册里的 6 张「深色仪表盘」改写成博客自己的美术语言：纸、墨、朱砂。
+
+   三条硬约束（来自 docs/DESIGN.md）：
+   1. 只有一个强调色 —— 朱砂。原图里的绿/蓝/紫/琥珀全部折进「墨色明度阶梯
+      + 朱砂透明度阶梯」，靠文字标签与色阶密度区分，不引入第二色相。
+   2. 圆角只有 3px（小标签）与 999px（药丸）；卡片、表格、图表一律直角。
+   3. 颜色一律取自 tokens（--paper/--ink/--accent/--rule），暗色模式只靠
+      tokens 覆盖，本文件不写第二套配色。
+
+   布局约束：宽度 = 正文栏（720px），**不破格**、不用负 margin、不产生横向
+   滚动（表格在窄屏内部滚动）。因此图表按 648px 内容宽排版，单列为主。
+
+   类名统一 ch- 前缀，避免与站点 .card / .tag 等组件撞名。
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. 容器与画布
+   -------------------------------------------------------------------------- */
+
+.chart-embed {
+  margin-block: var(--sp-6);
+  padding: var(--sp-5) var(--sp-4);
+  border: 1px solid var(--rule);
+  background: var(--paper-raised);
+  font-family: var(--font-sans);
+  font-size: var(--fs-sm);
+  line-height: 1.7;
+  color: var(--ink-soft);
+  text-wrap: pretty;
+  /* 内部一律不等宽、不继承正文的斜体/下划线 */
+  font-style: normal;
+}
+
+.chart-embed__canvas > * + * {
+  margin-top: var(--sp-4);
+}
+
+.chart-embed svg {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  overflow: visible;
+}
+
+.chart-embed svg text {
+  font-family: var(--font-sans);
+  font-variant-numeric: tabular-nums;
+}
+
+/* --------------------------------------------------------------------------
+   2. 图表抬头
+   -------------------------------------------------------------------------- */
+
+.ch-title {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: var(--fs-md);
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--ink);
+  text-wrap: balance;
+}
+
+.ch-lede {
+  margin: var(--sp-2) 0 0;
+  font-size: var(--fs-sm);
+  line-height: 1.6;
+  color: var(--ink-faint);
+}
+
+.ch-lede::before {
+  content: "";
+  display: block;
+  width: var(--sp-6);
+  height: 1px;
+  margin-bottom: var(--sp-3);
+  background: var(--accent);
+}
+
+/* --------------------------------------------------------------------------
+   3. 卡片
+   -------------------------------------------------------------------------- */
+
+.ch-card,
+.ch-card-stmt,
+.ch-card-val,
+.ch-step-card,
+.ch-rule-card {
+  padding: var(--sp-4);
+  background: var(--paper);
+  border: 1px solid var(--rule);
+}
+
+.ch-card-title {
+  margin: 0 0 var(--sp-3);
+  padding-left: var(--sp-3);
+  border-left: 3px solid var(--accent);
+  font-family: var(--font-serif);
+  font-size: var(--fs-base);
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--ink);
+}
+
+.ch-card-title > span {
+  display: block;
+  margin-top: var(--sp-1);
+  font-family: var(--font-sans);
+  font-size: var(--fs-xs);
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: var(--ink-faint);
+}
+
+/* --------------------------------------------------------------------------
+   4. 文字肌理：强调 / 次级 / 微注
+   -------------------------------------------------------------------------- */
+
+/* 朱砂强调：风险、代价、警示 */
+.ch-em {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* 墨色强调：正面结论 */
+.ch-good {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+/* 高亮数字/时点 */
+.ch-hl {
+  color: var(--accent);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.ch-subtitle {
+  margin-bottom: var(--sp-2);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--accent);
+}
+
+/* 小字注释：与 .prose figcaption 同一档 */
+.ch-micro {
+  font-size: var(--fs-xs);
+  line-height: 1.6;
+  color: var(--ink-faint);
+}
+
+.ch-note {
+  margin-top: var(--sp-3);
+  padding-top: var(--sp-3);
+  border-top: 1px solid var(--rule);
+  font-size: var(--fs-xs);
+  line-height: 1.7;
+  color: var(--ink-faint);
+}
+
+.ch-note strong {
+  color: var(--ink-soft);
+}
+
+/* --------------------------------------------------------------------------
+   5. 标签与徽章：四级风险阶梯 = 朱砂透明度 × 描边重量
+   -------------------------------------------------------------------------- */
+
+.ch-badge {
+  display: inline-block;
+  padding: 0 var(--sp-2);
+  border: 1px solid transparent;
+  border-radius: 3px;
+  font-size: var(--fs-xs);
+  font-weight: 500;
+  line-height: 1.7;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+/* 一级：只有描边，几乎无底色 */
+.ch-badge-safe {
+  background: transparent;
+  border-color: var(--rule-strong);
+  color: var(--ink-soft);
+}
+
+/* 二级：极浅朱砂底 */
+.ch-badge-mid {
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
+  border-color: color-mix(in srgb, var(--accent) 26%, transparent);
+  color: var(--accent);
+}
+
+/* 三级：加深底色 + 加粗 */
+.ch-badge-high {
+  background: color-mix(in srgb, var(--accent) 16%, transparent);
+  border-color: color-mix(in srgb, var(--accent) 42%, transparent);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* 四级：实心朱砂 */
+.ch-badge-danger {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--paper-raised);
+  font-weight: 600;
+}
+
+/* 药丸：金字塔右上的时间标签 */
+.ch-pill {
+  flex: none;
+  align-self: center;
+  padding: 0 var(--sp-2);
+  border: 1px solid var(--rule-strong);
+  border-radius: 999px;
+  font-size: var(--fs-xs);
+  line-height: 1.8;
+  color: var(--ink-faint);
+  white-space: nowrap;
+}
+
+/* --------------------------------------------------------------------------
+   6. 表格：沿用 .prose table 的排字语言（大写表头 + tabular-nums），
+      只把内边距收紧到密排档，并允许窄屏内部横向滚动。
+   -------------------------------------------------------------------------- */
+
+.ch-scroll {
+  overflow-x: auto;
+  /* 滚动条出现时不切断首末列的边框 */
+  margin-inline: calc(var(--sp-2) * -1);
+  padding-inline: var(--sp-2);
+  scrollbar-width: thin;
+}
+
+.chart-embed table {
+  width: 100%;
+  min-width: 30rem;
+  border-collapse: collapse;
+  font-size: var(--fs-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+.chart-embed th,
+.chart-embed td {
+  padding: var(--sp-2);
+  border-bottom: 1px solid var(--rule);
+  text-align: left;
+  vertical-align: top;
+}
+
+.chart-embed th {
+  padding-top: 0;
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  white-space: nowrap;
+}
+
+.chart-embed td {
+  color: var(--ink-soft);
+}
+
+.chart-embed tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.chart-embed td strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+/* --------------------------------------------------------------------------
+   7. 提示块：提示 / 陷阱 / 不可能三角
+   -------------------------------------------------------------------------- */
+
+.ch-callout,
+.ch-tip-box,
+.ch-trap-box,
+.ch-trinity-box,
+.ch-insight-box,
+.ch-bottom-quote {
+  padding: var(--sp-3) var(--sp-4);
+  border-left: 3px solid var(--accent);
+  background: var(--paper-sunken);
+  font-size: var(--fs-sm);
+  line-height: 1.75;
+  color: var(--ink-soft);
+}
+
+.ch-trinity-title,
+.ch-trap-title,
+.ch-insight-title {
+  margin-bottom: var(--sp-1);
+  font-family: var(--font-serif);
+  font-size: var(--fs-base);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.ch-highlight {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.ch-bottom-quote {
+  margin: 0;
+  border-left-color: var(--accent);
+  font-family: var(--font-serif);
+  font-size: var(--fs-base);
+  font-style: italic;
+  color: var(--ink);
+}
+
+/* --------------------------------------------------------------------------
+   8. 版式栅格：单列为主（内容宽 ≈ 648px），必要时两列
+   -------------------------------------------------------------------------- */
+
+.ch-grid-2,
+.ch-layout-grid,
+.ch-grid-3,
+.ch-grid-4,
+.ch-steps-container,
+.ch-key-insights {
+  display: grid;
+  gap: var(--sp-4);
+  /* minmax(0, 1fr) 而不是 1fr：1fr 的最小值是 auto，内部那张 min-width:30rem
+     的表格会把整列撑到 480px，手机上直接顶破正文栏。 */
+  grid-template-columns: minmax(0, 1fr);
+}
+
+/* 栅格子项同样要允许收缩，否则 min-content 会从表格一路冒到 .prose */
+.ch-card,
+.ch-card-stmt,
+.ch-card-val,
+.ch-step-card,
+.ch-rule-card,
+.ch-scroll {
+  min-width: 0;
+}
+
+/* 只有 4 张估值卡允许两列：卡片是纯文本，两列不至于挤 */
+@media (min-width: 560px) {
+  .ch-grid-4 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* --------------------------------------------------------------------------
+   9. chart1 · 资产光谱：金字塔 + 三联表
+   -------------------------------------------------------------------------- */
+
+.ch-pyramid-container {
+  display: grid;
+  gap: var(--sp-2);
+}
+
+.ch-pyr-level {
+  display: flex;
+  gap: var(--sp-3);
+  justify-content: space-between;
+  padding: var(--sp-2) var(--sp-3);
+  border-left: 3px solid var(--accent);
+  background: var(--paper-raised);
+  margin-inline: auto;
+}
+
+.ch-pyr-title {
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.ch-pyr-desc {
+  font-size: var(--fs-xs);
+  line-height: 1.6;
+  color: var(--ink-faint);
+}
+
+/* 金字塔：越往上越窄、朱砂越重（越靠长期/越需要承受波动） */
+.ch-pyr-1 {
+  width: 58%;
+  background: color-mix(in srgb, var(--accent) 16%, var(--paper-raised));
+  border-left-color: var(--accent);
+}
+
+.ch-pyr-2 {
+  width: 72%;
+  background: color-mix(in srgb, var(--accent) 10%, var(--paper-raised));
+}
+
+.ch-pyr-3 {
+  width: 86%;
+  background: color-mix(in srgb, var(--accent) 6%, var(--paper-raised));
+}
+
+.ch-pyr-4 {
+  width: 100%;
+  background: var(--paper-raised);
+}
+
+@media (max-width: 560px) {
+  .ch-pyr-1,
+  .ch-pyr-2,
+  .ch-pyr-3 {
+    width: 100%;
+  }
+
+  .ch-pyr-level {
+    flex-direction: column;
+    gap: var(--sp-1);
+  }
+
+  .ch-pill {
+    align-self: flex-start;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   10. chart2 · 从生意到股票：步骤链
+   -------------------------------------------------------------------------- */
+
+.ch-steps-container {
+  gap: var(--sp-3);
+  counter-reset: ch-step;
+}
+
+.ch-step-card {
+  position: relative;
+  padding-left: var(--sp-5);
+  counter-increment: ch-step;
+}
+
+.ch-step-card::before {
+  content: counter(ch-step, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: var(--sp-4);
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  color: var(--accent);
+}
+
+.ch-step-tag {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.ch-step-title {
+  margin-top: var(--sp-1);
+  font-family: var(--font-serif);
+  font-size: var(--fs-base);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+/* 片段里的指标是「标签：<strong>值</strong><br>」这种自然换行写法，
+   所以这里必须是块级；用 flex 会把标签与数值拆成两行错位（实测踩过）。 */
+.ch-step-metric {
+  margin-top: var(--sp-2);
+  padding-top: var(--sp-2);
+  border-top: 1px solid var(--rule);
+  font-size: var(--fs-xs);
+  line-height: 1.95;
+  color: var(--ink-faint);
+}
+
+.ch-step-metric strong {
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  color: var(--accent);
+}
+
+.ch-step-desc {
+  margin-top: var(--sp-2);
+  font-size: var(--fs-sm);
+  line-height: 1.7;
+  color: var(--ink-soft);
+}
+
+/* --------------------------------------------------------------------------
+   11. chart3 · K 线与盘口
+   -------------------------------------------------------------------------- */
+
+.ch-kline-box {
+  display: flex;
+  gap: var(--sp-4);
+  justify-content: center;
+  flex-wrap: wrap;
+  padding-block: var(--sp-2);
+}
+
+.ch-kline-box svg {
+  width: min(100%, 16.25rem);
+  height: auto;
+}
+
+.ch-pattern-item {
+  padding: var(--sp-2) var(--sp-3);
+  border-left: 3px solid var(--rule-strong);
+  background: var(--paper-raised);
+}
+
+.ch-pattern-item + .ch-pattern-item {
+  margin-top: var(--sp-2);
+}
+
+.ch-pattern-name {
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.ch-pattern-desc {
+  font-size: var(--fs-xs);
+  line-height: 1.6;
+  color: var(--ink-faint);
+}
+
+/* 五档 K 线形态：朱砂 → 墨 → 淡墨 的明度阶梯，靠文字区分语义 */
+/* 五档 K 线形态：前两档是有方向的（红涨绿跌），后三档靠墨色明度区分 */
+.ch-pattern-up { border-left-color: var(--stock-up); }
+
+.ch-pattern-up .ch-pattern-name {
+  color: var(--stock-up);
+}
+
+.ch-pattern-down { border-left-color: var(--stock-down); }
+
+.ch-pattern-down .ch-pattern-name {
+  color: var(--stock-down);
+}
+
+.ch-pattern-lv3 { border-left-color: var(--ink); }
+.ch-pattern-lv4 { border-left-color: var(--ink-soft); }
+.ch-pattern-lv5 { border-left-color: var(--ink-faint); }
+
+.ch-order-book {
+  font-variant-numeric: tabular-nums;
+}
+
+.ch-order-row {
+  display: grid;
+  grid-template-columns: 3.5rem 1fr 1fr;
+  gap: var(--sp-2);
+  padding: var(--sp-1) var(--sp-2);
+  border-bottom: 1px solid var(--rule);
+  font-size: var(--fs-xs);
+  color: var(--ink-soft);
+}
+
+.ch-order-row:last-child {
+  border-bottom: 0;
+}
+
+.ch-order-sell {
+  color: var(--stock-down);
+}
+
+.ch-order-sell .ch-order-label {
+  color: color-mix(in srgb, var(--stock-down) 70%, var(--ink-faint));
+}
+
+.ch-order-buy {
+  color: var(--stock-up);
+}
+
+.ch-order-buy .ch-order-label {
+  color: color-mix(in srgb, var(--stock-up) 70%, var(--ink-faint));
+}
+
+.ch-order-label {
+  letter-spacing: 0.06em;
+  color: var(--ink-faint);
+}
+
+.ch-order-current {
+  background: color-mix(in srgb, var(--stock-up) 10%, transparent);
+  color: var(--stock-up);
+  font-weight: 600;
+}
+
+.ch-meta-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+  margin-top: var(--sp-3);
+}
+
+.ch-meta-pill {
+  padding: 0 var(--sp-2);
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  font-size: var(--fs-xs);
+  color: var(--ink-faint);
+}
+
+/* --------------------------------------------------------------------------
+   12. chart4 · 三张报表与估值
+   -------------------------------------------------------------------------- */
+
+.ch-section-label {
+  padding-bottom: var(--sp-1);
+  border-bottom: 1px solid var(--rule-strong);
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.ch-stmt-header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.ch-stmt-name {
+  font-family: var(--font-serif);
+  font-size: var(--fs-base);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.ch-stmt-badge {
+  padding: 0 var(--sp-2);
+  border: 1px solid currentColor;
+  border-radius: 3px;
+  font-size: var(--fs-xs);
+  color: var(--accent);
+}
+
+/* 三个报表标签的色阶（只是朱砂浓度不同） */
+.ch-stmt-badge-a {
+  color: var(--ink-faint);
+}
+
+.ch-stmt-badge-b {
+  color: color-mix(in srgb, var(--accent) 62%, var(--ink));
+}
+
+.ch-stmt-badge-c {
+  color: var(--accent);
+}
+
+.ch-stmt-desc {
+  margin-top: var(--sp-2);
+  font-size: var(--fs-sm);
+  line-height: 1.7;
+  color: var(--ink-soft);
+}
+
+.ch-stmt-formula {
+  margin-top: var(--sp-2);
+  padding: var(--sp-2) var(--sp-3);
+  background: var(--paper-sunken);
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  line-height: 1.8;
+  color: var(--ink-soft);
+}
+
+.ch-stmt-warn {
+  margin-top: var(--sp-2);
+  font-size: var(--fs-xs);
+  line-height: 1.7;
+  color: var(--ink-faint);
+}
+
+.ch-stmt-warn strong {
+  color: var(--accent);
+}
+
+.ch-val-code {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  letter-spacing: 0.1em;
+  color: var(--accent);
+}
+
+.ch-val-name {
+  margin-top: var(--sp-1);
+  font-family: var(--font-serif);
+  font-size: var(--fs-base);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.ch-val-formula {
+  margin-top: var(--sp-2);
+  padding: var(--sp-2);
+  background: var(--paper-sunken);
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  line-height: 1.7;
+  color: var(--ink-soft);
+  overflow-x: auto;
+}
+
+.ch-val-desc {
+  margin-top: var(--sp-2);
+  font-size: var(--fs-xs);
+  line-height: 1.7;
+  color: var(--ink-faint);
+}
+
+.ch-val-desc strong {
+  color: var(--accent);
+}
+
+.ch-val-tag {
+  margin-top: var(--sp-3);
+  padding-top: var(--sp-2);
+  border-top: 1px solid var(--rule);
+  font-size: var(--fs-xs);
+  color: var(--ink-faint);
+}
+
+/* --------------------------------------------------------------------------
+   13. chart5 · 交易流程与摩擦成本
+   -------------------------------------------------------------------------- */
+
+.ch-timeline {
+  display: grid;
+  gap: var(--sp-2);
+}
+
+.ch-time-node {
+  display: flex;
+  gap: var(--sp-3);
+  align-items: baseline;
+  padding-bottom: var(--sp-2);
+  border-bottom: 1px solid var(--rule);
+}
+
+.ch-time-badge {
+  flex: none;
+  min-width: 4.5rem;
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  color: var(--accent);
+}
+
+.ch-time-text {
+  font-size: var(--fs-sm);
+  color: var(--ink-soft);
+}
+
+.ch-rules-grid {
+  display: grid;
+  gap: var(--sp-2);
+  margin-top: var(--sp-3);
+}
+
+.ch-rule-item {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--sp-1) var(--sp-3);
+  padding: var(--sp-2) var(--sp-3);
+  border-left: 3px solid var(--rule-strong);
+  background: var(--paper-raised);
+}
+
+.ch-rule-board {
+  font-size: var(--fs-sm);
+  color: var(--ink);
+}
+
+.ch-rule-pct {
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.ch-rule-item > .ch-micro {
+  grid-column: 1 / -1;
+}
+
+.ch-compare-box {
+  display: grid;
+  gap: var(--sp-3);
+  padding: var(--sp-4);
+  background: var(--paper-sunken);
+}
+
+@media (min-width: 560px) {
+  .ch-compare-box {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+.ch-compare-side {
+  font-size: var(--fs-sm);
+  line-height: 1.75;
+  color: var(--ink-soft);
+}
+
+.ch-split {
+  padding-right: var(--sp-3);
+  border-right: 1px solid var(--rule);
+}
+
+@media (max-width: 559px) {
+  .ch-split {
+    padding-right: 0;
+    padding-bottom: var(--sp-3);
+    border-right: 0;
+    border-bottom: 1px solid var(--rule);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   14. chart6 · 心理曲线与纪律
+   -------------------------------------------------------------------------- */
+
+.ch-svg-box {
+  display: flex;
+  justify-content: center;
+  padding-block: var(--sp-2);
+}
+
+.ch-desc-box {
+  margin-top: var(--sp-2);
+  padding-top: var(--sp-2);
+  border-top: 1px solid var(--rule);
+  font-size: var(--fs-sm);
+  line-height: 1.75;
+  color: var(--ink-soft);
+}
+
+.ch-desc-box strong {
+  color: var(--accent);
+}
+
+.ch-rule-card {
+  border-left: 3px solid var(--rule-strong);
+}
+
+.ch-rule-card + .ch-rule-card {
+  margin-top: var(--sp-2);
+}
+
+.ch-rule-title {
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.ch-rule-detail {
+  margin-top: var(--sp-1);
+  font-size: var(--fs-xs);
+  line-height: 1.7;
+  color: var(--ink-faint);
+}
+
+/* --------------------------------------------------------------------------
+   15. 内联 SVG 的墨色表达
+       原图用 5 个彩色系表达涨/跌/参考线；这里折成墨的明度阶梯 + 朱砂，
+       叠加文字标签后语义不依赖颜色本身（DESIGN §2.3）。
+   -------------------------------------------------------------------------- */
+
+.kfA { fill: var(--accent); }
+.kfI { fill: var(--ink); }
+.kfS { fill: var(--ink-soft); }
+.kfF { fill: var(--ink-faint); }
+.kfP { fill: var(--paper-raised); }
+
+.ksA { stroke: var(--accent); }
+.ksI { stroke: var(--ink); }
+.ksS { stroke: var(--ink-soft); }
+.ksF { stroke: var(--ink-faint); }
+.ksR { stroke: var(--rule-strong); }
+
+/* --------------------------------------------------------------------------
+   15.5 股市涨跌：红涨绿跌（A 股 / 日经惯例，与欧美绿涨红跌相反）
+
+   这是全站唯一的双色例外，而且只在这个区块里生效：涨跌方向是行业约定，
+   读者要靠颜色一眼分辨阴阳线，不是装饰。所以这两组色不进 tokens，
+   也不在 .chart-embed 之外声明，避免被别处误用成「随便的彩色」。
+   -------------------------------------------------------------------------- */
+
+.chart-embed {
+  --stock-up: #c0392b;
+  --stock-down: #1f7a4d;
+}
+
+[data-theme="dark"] .chart-embed {
+  --stock-up: #e8756a;
+  --stock-down: #57b98a;
+}
+
+.kfUp { fill: var(--stock-up); }
+.ksUp { stroke: var(--stock-up); }
+.kfDown { fill: var(--stock-down); }
+.ksDown { stroke: var(--stock-down); }
+
+/* --------------------------------------------------------------------------
+   15.6 横条 / 折线面板（chart7 复利、chart10 均线、chart11 网格）
+
+   这三张图的网格线与坐标标签都只是辅助，尺寸交给 viewBox 缩放；
+   设计宽度按 300 出图，桌面封顶 22rem，保证 11px 的轴标签不会被缩成 6px。
+   -------------------------------------------------------------------------- */
+
+.ch-plot {
+  margin-top: var(--sp-3);
+}
+
+.ch-plot svg {
+  width: 100%;
+  max-width: 24rem;
+  margin-inline: auto;
+}
+
+.ch-track {
+  fill: color-mix(in srgb, var(--ink) 9%, transparent);
+}
+
+/* 图例：色块 + 名称，靠 flex 的 gap 排版，窄屏自然折行 */
+.ch-legend,
+.ch-session-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-1) var(--sp-4);
+  margin-top: var(--sp-3);
+  font-size: var(--fs-xs);
+  color: var(--ink-soft);
+}
+
+.ch-swatch {
+  display: inline-block;
+  width: 0.875rem;
+  height: 0.1875rem;
+  background: var(--ink);
+  vertical-align: middle;
+}
+
+/* 每一项都是「色块 + 名称」的不可拆分整体，否则折行时色块会留在上一行 */
+.ch-legend-item {
+  display: inline-flex;
+  gap: var(--sp-1);
+  align-items: center;
+  white-space: nowrap;
+}
+
+.ch-swatch--ink { background: var(--ink); }
+.ch-swatch--accent { background: var(--accent); }
+.ch-swatch--soft { background: var(--ink-soft); }
+
+/* 虚线均线在图例里也用虚线，避免和「收盘价」的实线混淆 */
+.ch-swatch--dashed {
+  background: repeating-linear-gradient(90deg, var(--ink-soft) 0 4px, transparent 4px 7px);
+}
+
+.ch-swatch--up,
+.ch-swatch--down {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 999px;
+}
+
+.ch-swatch--up { background: var(--stock-up); }
+.ch-swatch--down { background: var(--stock-down); }
+
+/* --------------------------------------------------------------------------
+   15.7 R1–R5 风险阶梯（chart8）
+
+   用「左侧逐级缩进 + 五格风险表」表达台阶，不引入第二种颜色：
+   R1 近似保本在最上，R5 可能亏本在最下，缩进越深越危险。
+   -------------------------------------------------------------------------- */
+
+.ch-ladder {
+  display: grid;
+  gap: var(--sp-2);
+  margin-top: var(--sp-3);
+}
+
+.ch-ladder-row {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1);
+  padding: var(--sp-3);
+  border: 1px solid var(--rule);
+  background: var(--paper);
+}
+
+.ch-ladder-l2 { margin-left: var(--sp-2); }
+.ch-ladder-l3 { margin-left: var(--sp-4); }
+.ch-ladder-l4 { margin-left: var(--sp-5); }
+.ch-ladder-l5 { margin-left: var(--sp-6); }
+
+.ch-ladder-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+  align-items: center;
+}
+
+.ch-ladder-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1);
+}
+
+.ch-ladder-name {
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.ch-ladder-note {
+  font-size: var(--fs-xs);
+  line-height: 1.6;
+  color: var(--ink-soft);
+}
+
+/* 五格风险表：实心格 = 该等级的风险格数 */
+.ch-meter {
+  display: inline-flex;
+  gap: var(--sp-1);
+}
+
+.ch-dot {
+  width: 0.375rem;
+  height: 0.375rem;
+  border: 1px solid var(--rule-strong);
+  border-radius: 999px;
+}
+
+.ch-dot.is-on {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+/* --------------------------------------------------------------------------
+   15.8 交易日时段（chart9）
+
+   比例尺按真实分钟数画（flex-grow 用 data-min 取值），
+   三段集合竞价用朱砂深浅区分「可撤单 / 不可撤单」。
+   -------------------------------------------------------------------------- */
+
+.ch-session-bar {
+  display: flex;
+  gap: 2px;
+  height: 0.75rem;
+  margin-top: var(--sp-3);
+}
+
+.ch-session-seg {
+  flex-basis: 0;
+  flex-grow: 1;
+}
+
+.ch-session-bar [data-min="3"] { flex-grow: 3; }
+.ch-session-bar [data-min="5"] { flex-grow: 5; }
+.ch-session-bar [data-min="90"] { flex-grow: 90; }
+.ch-session-bar [data-min="117"] { flex-grow: 117; }
+.ch-session-bar [data-min="120"] { flex-grow: 120; }
+
+.ch-session-seg--auction { background: color-mix(in srgb, var(--accent) 32%, transparent); }
+.ch-session-seg--locked { background: var(--accent); }
+.ch-session-seg--trade { background: color-mix(in srgb, var(--ink) 26%, transparent); }
+.ch-session-seg--rest { background: color-mix(in srgb, var(--ink) 8%, transparent); }
+
+.ch-swatch--auction { background: color-mix(in srgb, var(--accent) 32%, transparent); }
+.ch-swatch--locked { background: var(--accent); }
+.ch-swatch--trade { background: color-mix(in srgb, var(--ink) 26%, transparent); }
+.ch-swatch--rest { background: color-mix(in srgb, var(--ink) 8%, transparent); }
+
+.ch-session-rows {
+  margin-top: var(--sp-4);
+}
+
+.ch-session-row {
+  display: grid;
+  grid-template-columns: 5.6rem minmax(0, 1fr) auto;
+  gap: var(--sp-1) var(--sp-3);
+  align-items: baseline;
+  padding: var(--sp-2) 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.ch-session-row:last-child {
+  border-bottom: 0;
+}
+
+.ch-session-name {
+  font-size: var(--fs-sm);
+  color: var(--ink-soft);
+}
+
+.ch-session-dur {
+  margin-left: var(--sp-2);
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  font-style: normal;
+  color: var(--ink-faint);
+}
+
+.ch-session-flag {
+  padding: 1px var(--sp-2);
+  border: 1px solid var(--rule-strong);
+  font-size: var(--fs-xs);
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+
+.ch-flag-solid {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--paper-raised);
+}
+
+.ch-flag-soft {
+  border-color: color-mix(in srgb, var(--accent) 45%, transparent);
+  color: var(--accent);
+}
+
+.ch-flag-mute {
+  border-color: var(--rule);
+  color: var(--ink-faint);
+}
+
+/* --------------------------------------------------------------------------
+   15.9 金字塔仓位（chart11）
+
+   与 chart1 的四笔钱金字塔同一套形状，但含义相反：这里是仓位，
+   越往下越便宜也越重，所以朱砂浓度随「仓位大小」加深，而不是随高度。
+   -------------------------------------------------------------------------- */
+
+.ch-tier-container {
+  display: grid;
+  gap: var(--sp-2);
+}
+
+.ch-tier {
+  display: flex;
+  gap: var(--sp-3);
+  align-items: center;
+  justify-content: space-between;
+  margin-inline: auto;
+  padding: var(--sp-2) var(--sp-3);
+  border-left: 3px solid var(--accent);
+  background: var(--paper-raised);
+}
+
+.ch-tier-1 { width: 58%; }
+
+.ch-tier-2 {
+  width: 79%;
+  background: color-mix(in srgb, var(--accent) 8%, var(--paper-raised));
+}
+
+.ch-tier-3 {
+  width: 100%;
+  background: color-mix(in srgb, var(--accent) 16%, var(--paper-raised));
+}
+
+.ch-tier-title {
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.ch-tier-desc {
+  font-size: var(--fs-xs);
+  line-height: 1.6;
+  color: var(--ink-faint);
+}
+
+/* --------------------------------------------------------------------------
+   15.10 折线阴影 / 堆叠条 / 合计行（chart12、chart14、chart15）
+   -------------------------------------------------------------------------- */
+
+/* chart12：名义价值与实际购买力之间的「蒸发区」 */
+.ch-gap {
+  fill: color-mix(in srgb, var(--accent) 9%, transparent);
+}
+
+/* chart14：100% 堆叠条。左段=股票市值，右段=现金，三段式栅格保证比例不被文字撑歪 */
+.ch-stack-row {
+  display: grid;
+  grid-template-columns: 4.25rem minmax(0, 1fr) auto;
+  gap: var(--sp-3);
+  align-items: center;
+  margin-top: var(--sp-2);
+}
+
+.ch-stack-label {
+  font-size: var(--fs-xs);
+  color: var(--ink-faint);
+}
+
+.ch-stack-note {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  color: var(--ink-soft);
+  white-space: nowrap;
+}
+
+.ch-stack {
+  display: flex;
+  gap: 1px;
+  height: 1.375rem;
+  border: 1px solid var(--rule);
+  background: var(--paper);
+}
+
+.ch-stack-seg--stock {
+  background: var(--accent);
+}
+
+.ch-stack-seg--cash {
+  background: color-mix(in srgb, var(--accent) 22%, var(--paper-raised));
+}
+
+.ch-stack--100 .ch-stack-seg--stock { flex: 100; }
+.ch-stack--95 .ch-stack-seg--stock { flex: 95; }
+.ch-stack--95 .ch-stack-seg--cash { flex: 5; }
+.ch-stack--97 .ch-stack-seg--stock { flex: 97; }
+.ch-stack--97 .ch-stack-seg--cash { flex: 3; }
+
+.ch-swatch--cash {
+  background: color-mix(in srgb, var(--accent) 22%, var(--paper-raised));
+}
+
+/* chart15：合计行比数据行更重一级 */
+.ch-scroll tr.ch-total-row td {
+  border-top: 1px solid var(--rule-strong);
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
+  font-weight: 600;
+}
+
+@media (max-width: 560px) {
+  .ch-tier {
+    width: 100%;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--sp-1);
+  }
+
+  .ch-tier .ch-pill {
+    align-self: flex-start;
+  }
+
+  .ch-ladder-l4,
+  .ch-ladder-l5 {
+    margin-left: var(--sp-4);
+  }
+
+  .ch-session-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .ch-session-row .ch-time-badge {
+    grid-column: 1 / -1;
+    min-width: 0;
+  }
+
+  .ch-stack-row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--sp-1);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   16. 窄屏与暗色
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 768px) {
+  .chart-embed {
+    margin-block: var(--sp-5);
+    padding: var(--sp-4) var(--sp-3);
+    font-size: var(--fs-sm);
+  }
+
+  .ch-title {
+    font-size: var(--fs-base);
+  }
+
+  .chart-embed table {
+    min-width: 26rem;
+    font-size: var(--fs-xs);
+  }
+}
+
+/* 暗色下卡片与画布的层次：raised 之上再压一层 paper-sunken 会更糊，
+   所以卡片改用 ink 的极低透明度提亮，保持「墨底」而非发灰。 */
+[data-theme="dark"] .chart-embed {
+  background: var(--paper-raised);
+}
+
+[data-theme="dark"] .ch-card,
+[data-theme="dark"] .ch-card-stmt,
+[data-theme="dark"] .ch-card-val,
+[data-theme="dark"] .ch-step-card,
+[data-theme="dark"] .ch-rule-card,
+[data-theme="dark"] .ch-pyr-level,
+[data-theme="dark"] .ch-tier,
+[data-theme="dark"] .ch-ladder-row,
+[data-theme="dark"] .ch-pattern-item,
+[data-theme="dark"] .ch-rule-item {
+  background: color-mix(in srgb, var(--ink) 4%, var(--paper-sunken));
+}
+
+@media print {
+  .chart-embed {
+    break-inside: avoid;
+  }
+}

@@ -9,6 +9,8 @@
  */
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import '../../styles/page-post.css';
+// 图表内嵌组件（.chart-embed / .ch-*）：只有文章页会用到，跟着页面走而不是进全局样式。
+import '../../styles/charts.css';
 
 import { getCollection, render } from 'astro:content';
 import Decor from '../../components/Decor.astro';

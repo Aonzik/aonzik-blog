@@ -28,7 +28,7 @@ export const footerNav = [
 ];
 
 /** 页脚「分类」栏：链接指向 /tags/<分类>/ */
-export const footerCategories = ['技术', '随笔', '阅读', '设计'];
+export const footerCategories = ['技术', '随笔', '阅读', '设计', '生活'];
 
 /** 分类的固定顺序（技术 / 随笔 / 阅读 / 设计 / 生活） */
 export const CATEGORY_ORDER = ['技术', '随笔', '阅读', '设计', '生活'];
