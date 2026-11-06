@@ -40,8 +40,12 @@ const { Content, headings } = await render(post);
 const all = sortPosts(published(await getCollection('posts')));
 const { prev, next } = neighbours(all, post);
 
-/** 目录只取 h2 / h3（与 .toc-item--h3 缩进对应） */
-const tocItems = headings.filter((heading) => heading.depth === 2 || heading.depth === 3);
+/**
+ * 目录只取文档里最浅的两级标题：多数文章是 h2 / h3，高等数学那篇自发用了 h1 分章。
+ * 较浅的一级在 Toc 里变成可折叠的分组标题，较深的一级收在组内。
+ */
+const tocDepths = [...new Set(headings.map((heading) => heading.depth))].sort((a, b) => a - b).slice(0, 2);
+const tocItems = headings.filter((heading) => tocDepths.includes(heading.depth));
 ---
 
 <BaseLayout
@@ -90,7 +94,7 @@ const tocItems = headings.filter((heading) => heading.depth === 2 || heading.dep
             <Decor slot="post-cover-sticker" />
           </figure>
 
-          <Toc items={tocItems} label="目录" title="目录" />
+          <Toc items={tocItems} label="目录" title="目录" uid="toc-body" />
 
           <div class="prose decor-host">
             <Content />
@@ -145,7 +149,7 @@ const tocItems = headings.filter((heading) => heading.depth === 2 || heading.dep
         </article>
 
         <aside class="article-aside" tabindex="0" aria-label="页面目录滚动区">
-          <Toc items={tocItems} label="页面目录" title="目录" withDecor />
+          <Toc items={tocItems} label="页面目录" title="目录" withDecor uid="toc-aside" defaultCollapsed />
         </aside>
       </div>
     </div>

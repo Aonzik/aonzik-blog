@@ -76,6 +76,8 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? 'https://aonzik.exam
       // 优先级：URL 查询参数（?decor=debug）> localStorage > 系统偏好
       (function () {
         try {
+          // 脚本跑起来了：目录折叠等「渐进增强」样式才生效（见 components.css）
+          document.documentElement.classList.add('has-js');
           var params = new URLSearchParams(location.search);
           var q = params.get('decor');
           var mode = q === 'on' || q === 'off' || q === 'debug' ? q : localStorage.getItem('aonzik-decor') || 'on';

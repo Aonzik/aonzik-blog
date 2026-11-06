@@ -941,6 +941,11 @@
 
 .toc-list { list-style: none; display: flex; flex-direction: column; gap: 4px; }
 
+/* 浏览器给 ul 的 40px 缩进 + .prose ul 的 1.6em，会把侧栏（220px 宽）里的
+   子项挤到只剩 60px 可写，标题被迫折成两行。目录自己控制缩进：外层不缩进，
+   子项用 .toc-item--sub 的 padding 缩一层。 */
+.toc .toc-list { padding-left: 0; margin: 0; }
+
 .toc-item a {
   font-size: var(--fs-sm);
   color: var(--ink-soft);
@@ -949,7 +954,47 @@
 }
 
 .toc-item a:hover, .toc-item.is-active a { color: var(--accent); }
-.toc-item--h3 { padding-left: 1.2em; }
+
+/* 分组：组标题一行，右边一个小三角当开关；组内条目缩进一层 */
+.toc-row { display: flex; align-items: flex-start; gap: 0.25rem; }
+.toc-row > a { flex: 0 1 auto; min-width: 0; }
+
+.toc-toggle {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.05rem;
+  height: 1.05rem;
+  margin-top: 0.3em;
+  padding: 0;
+  border: 0;
+  border-radius: 2px;
+  background: none;
+  color: var(--ink-faint);
+  cursor: pointer;
+  transition: color var(--dur) var(--ease);
+}
+
+.toc-toggle svg {
+  width: 0.58rem;
+  height: 0.58rem;
+  transition: transform var(--dur) var(--ease);
+}
+
+.toc-toggle:hover { color: var(--accent); }
+.toc-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.toc-toggle[aria-expanded="true"] svg { transform: rotate(90deg); }
+
+.toc-sub { margin-top: 4px; }
+.toc-item--sub { padding-left: 1.2em; }
+/* 侧栏只有 220px 宽，长标题必然折行；pretty 让两行长度接近，不留下一个孤字 */
+.toc-item--sub a { display: block; text-wrap: pretty; }
+.toc-sub.is-collapsed { display: none; }
+
+/* 没有 JS 时全部展开、隐藏点不动的开关 */
+html:not(.has-js) .toc-sub.is-collapsed { display: flex; }
+html:not(.has-js) .toc-toggle { display: none; }
 
 /* ============================================================
    页脚

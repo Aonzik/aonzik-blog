@@ -2,7 +2,8 @@
 /**
  * 目录（Table of Contents）—— 结构与原稿一致，文章页会用到两次：
  *   正文内一份（aria-label="目录"）、右侧粘性侧栏一份（aria-label="页面目录"）。
- * items 直接来自 Astro 的 render(entry).headings（h2/h3）。
+ * items 来自 render(entry).headings，页面已筛成文档里最浅的两级；
+ * 这里按层级分组：较浅的一级是可折叠的组标题，较深的一级收在组内。
  */
 import Decor from './Decor.astro';
 
@@ -20,18 +21,80 @@ interface Props {
   title?: string;
   /** 是否带上目录下方的装饰挂件（只有右侧侧栏那一份需要） */
   withDecor?: boolean;
+  /** 组内条目初始是否折叠（侧栏用它保持短小，正文内的目录默认展开） */
+  defaultCollapsed?: boolean;
+  /** 同一页渲染两份目录，用它给 aria-controls 的 id 加前缀，免得 id 重复 */
+  uid?: string;
 }
 
-const { items, label = '目录', title = '目录', withDecor = false } = Astro.props;
+const {
+  items,
+  label = '目录',
+  title = '目录',
+  withDecor = false,
+  defaultCollapsed = false,
+  uid = 'toc',
+} = Astro.props;
+
+/**
+ * 分组：遇到不比当前组更深的标题就开新组，更深的挂进当前组。
+ * 页面只喂两级，所以每组最多一层子项。
+ */
+const groups: { item: TocItem; children: TocItem[] }[] = [];
+for (const item of items) {
+  const last = groups[groups.length - 1];
+  if (!last || item.depth <= last.item.depth) {
+    groups.push({ item, children: [] });
+  } else {
+    last.children.push(item);
+  }
+}
+
+const expanded: 'true' | 'false' = defaultCollapsed ? 'false' : 'true';
 ---
 
 <nav class="toc decor-host" aria-label={label}>
   <p class="toc-title">{title}</p>
   <ul class="toc-list" role="list">
     {
-      items.map((item) => (
-        <li class:list={['toc-item', item.depth === 3 && 'toc-item--h3']}>
-          <a href={`#${item.slug}`}>{item.text}</a>
+      groups.map(({ item, children }) => (
+        <li class="toc-item toc-group">
+          <div class="toc-row">
+            <a href={`#${item.slug}`}>{item.text}</a>
+            {children.length > 0 && (
+              <button
+                class="toc-toggle"
+                type="button"
+                aria-expanded={expanded}
+                aria-controls={`${uid}-${item.slug}`}
+                aria-label={`${item.text}（展开 / 收起）`}
+              >
+                <svg viewBox="0 0 10 10" aria-hidden="true" focusable="false">
+                  <path
+                    d="M3.2 1.6 7 5l-3.8 3.4"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </button>
+            )}
+          </div>
+          {children.length > 0 && (
+            <ul
+              class:list={['toc-list', 'toc-sub', defaultCollapsed && 'is-collapsed']}
+              id={`${uid}-${item.slug}`}
+              role="list"
+            >
+              {children.map((child) => (
+                <li class="toc-item toc-item--sub">
+                  <a href={`#${child.slug}`}>{child.text}</a>
+                </li>
+              ))}
+            </ul>
+          )}
         </li>
       ))
     }

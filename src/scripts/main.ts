@@ -210,6 +210,8 @@ function setupReadProgress(): void {
 function keepTocInView(link: HTMLAnchorElement): void {
   const box = link.closest<HTMLElement>('.article-aside');
   if (!box || box.scrollHeight <= box.clientHeight) return;
+  // 收起来的条目量不到位置（rect 全是 0），别拿它去滚动侧栏
+  if (!link.offsetParent) return;
   const pad = 16;
   const item = link.getBoundingClientRect();
   const area = box.getBoundingClientRect();
@@ -220,11 +222,61 @@ function keepTocInView(link: HTMLAnchorElement): void {
   }
 }
 
+/** 目录分组的开合：组标题右侧那颗按钮控制它下面的 .toc-sub */
+function setGroupOpen(group: HTMLElement, open: boolean): void {
+  const button = group.querySelector<HTMLButtonElement>('.toc-toggle');
+  const sub = group.querySelector<HTMLElement>('.toc-sub');
+  if (!button || !sub) return;
+  button.setAttribute('aria-expanded', String(open));
+  sub.classList.toggle('is-collapsed', !open);
+}
+
+function isGroupOpen(group: HTMLElement): boolean {
+  return group.querySelector('.toc-toggle')?.getAttribute('aria-expanded') === 'true';
+}
+
+function setupTocGroups(): void {
+  for (const button of document.querySelectorAll<HTMLButtonElement>('.toc-toggle')) {
+    const group = button.closest<HTMLElement>('.toc-group');
+    if (!group) continue;
+    button.addEventListener('click', () => {
+      setGroupOpen(group, !isGroupOpen(group));
+      // 读者亲手开合过的组，之后不再被「跟随阅读位置」自动开关
+      group.dataset.manual = '1';
+      group.removeAttribute('data-auto');
+    });
+  }
+}
+
+/**
+ * 阅读位置进入某个分组时把它展开，并收起此前自动展开的组。
+ * 手动开合的组（dataset.manual）不参与，免得跟读者抢控制权。
+ */
+function revealTocGroup(link: HTMLAnchorElement): void {
+  const nav = link.closest<HTMLElement>('.toc');
+  if (!nav) return;
+  const group = link.closest<HTMLElement>('.toc-group');
+  const hasSub = !!group?.querySelector('.toc-sub');
+
+  if (group && hasSub && group.dataset.manual !== '1' && !isGroupOpen(group)) {
+    setGroupOpen(group, true);
+    group.dataset.auto = '1';
+  }
+
+  for (const other of nav.querySelectorAll<HTMLElement>('.toc-group[data-auto="1"]')) {
+    if (other === group) continue;
+    setGroupOpen(other, false);
+    other.removeAttribute('data-auto');
+  }
+}
+
 function setupToc(): void {
   // 侧栏目录比视口高时打标记：让挂在目录下方外侧的小装饰让位（见 page-post.css）。
   // 必须放在下面的 early return 之前，否则老浏览器里装饰件会错误地留着。
   const aside = document.querySelector<HTMLElement>('.article-aside');
   if (aside) aside.classList.toggle('is-scrollable', aside.scrollHeight > aside.clientHeight + 4);
+
+  setupTocGroups();
 
   const links = [...document.querySelectorAll<HTMLAnchorElement>('.toc-item a[href^="#"]')];
   const groups = new Map<string, HTMLAnchorElement[]>();
@@ -240,8 +292,11 @@ function setupToc(): void {
     for (const [key, group] of groups) {
       const on = key === id;
       for (const link of group) {
-        link.parentElement?.classList.toggle('is-active', on);
-        if (on) keepTocInView(link);
+        link.closest('li')?.classList.toggle('is-active', on);
+        if (on) {
+          revealTocGroup(link);
+          keepTocInView(link);
+        }
       }
     }
   };
