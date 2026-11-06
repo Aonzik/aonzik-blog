@@ -202,7 +202,30 @@ function setupReadProgress(): void {
 /* ------------------------------------------------------------------
    目录高亮（文章页正文内目录 + 右侧粘性目录同步）
    ------------------------------------------------------------------ */
+/**
+ * 把当前章节的目录项滚进右侧栏的可视区。
+ * 只调整「最近的可滚动祖先」(.article-aside) 的 scrollTop，绝不用
+ * scrollIntoView —— 那会连带滚动整个页面，读者会感觉页面「跳一下」。
+ */
+function keepTocInView(link: HTMLAnchorElement): void {
+  const box = link.closest<HTMLElement>('.article-aside');
+  if (!box || box.scrollHeight <= box.clientHeight) return;
+  const pad = 16;
+  const item = link.getBoundingClientRect();
+  const area = box.getBoundingClientRect();
+  if (item.top < area.top + pad) {
+    box.scrollTop -= area.top + pad - item.top;
+  } else if (item.bottom > area.bottom - pad) {
+    box.scrollTop += item.bottom - (area.bottom - pad);
+  }
+}
+
 function setupToc(): void {
+  // 侧栏目录比视口高时打标记：让挂在目录下方外侧的小装饰让位（见 page-post.css）。
+  // 必须放在下面的 early return 之前，否则老浏览器里装饰件会错误地留着。
+  const aside = document.querySelector<HTMLElement>('.article-aside');
+  if (aside) aside.classList.toggle('is-scrollable', aside.scrollHeight > aside.clientHeight + 4);
+
   const links = [...document.querySelectorAll<HTMLAnchorElement>('.toc-item a[href^="#"]')];
   const groups = new Map<string, HTMLAnchorElement[]>();
   for (const link of links) {
@@ -215,8 +238,10 @@ function setupToc(): void {
 
   const activate = (id: string | null): void => {
     for (const [key, group] of groups) {
+      const on = key === id;
       for (const link of group) {
-        link.parentElement?.classList.toggle('is-active', key === id);
+        link.parentElement?.classList.toggle('is-active', on);
+        if (on) keepTocInView(link);
       }
     }
   };

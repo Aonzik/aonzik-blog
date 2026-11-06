@@ -144,7 +144,7 @@ const tocItems = headings.filter((heading) => heading.depth === 2 || heading.dep
           </div>
         </article>
 
-        <aside class="article-aside">
+        <aside class="article-aside" tabindex="0" aria-label="页面目录滚动区">
           <Toc items={tocItems} label="页面目录" title="目录" withDecor />
         </aside>
       </div>

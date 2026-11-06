@@ -82,8 +82,36 @@
     .post-nav-item:hover .post-nav-title { color: var(--accent); }
     .post-nav-item--next { text-align: right; }
 
-    /* 侧栏：粘性目录 */
+    /* 侧栏：粘性目录
+       sticky 元素若比视口高，顶部钉住后底部会永远停在视口外、条目点不到；
+       所以必须给它自己的滚动区：max-height 限高 + overflow-y 滚动。 */
     .article-aside {
       position: sticky;
       top: 5.5rem;
+      max-height: calc(100vh - 5.5rem - 1.5rem);   /* 不支持 dvh 的浏览器兜底 */
+      max-height: calc(100dvh - 5.5rem - 1.5rem);  /* 动态视口：地址栏伸缩不切底 */
+      overflow-y: auto;
+      overscroll-behavior: contain;                /* 滚到目录尽头不带动整页 */
+      padding-right: 0.4rem;                       /* 给滚动条让位，不压条目文字 */
+      scrollbar-width: thin;
+      scrollbar-color: var(--rule) transparent;
     }
+
+    /* 滚动条：scrollbar-* 只被 Firefox 与 Chromium 121+ 认，其余走伪元素 */
+    .article-aside::-webkit-scrollbar { width: 6px; }
+    .article-aside::-webkit-scrollbar-track { background: transparent; }
+    .article-aside::-webkit-scrollbar-thumb {
+      background: var(--rule);
+      border-radius: 3px;
+    }
+    .article-aside:hover::-webkit-scrollbar-thumb { background: var(--rule-strong); }
+
+    /* 滚动容器可聚焦：纯键盘用户才能用方向键 / PageDown 滚目录 */
+    .article-aside:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 4px;
+    }
+
+    /* 目录比视口高时（JS 打 .is-scrollable），挂在目录盒子下方外侧的小装饰
+       会变成滚动内容末尾的一段空白，直接让位。 */
+    .article-aside.is-scrollable [data-decor-slot="toc-mascot"] { display: none; }
