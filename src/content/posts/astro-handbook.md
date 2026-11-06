@@ -1,41 +1,20 @@
 ---
 title: Astro 学习手册
-description: 版本基线为：2026 年 10 月，Astro 7.x（Rust 编译器 + Sätteri Markdown + Vite 8/Rolldown）。适用读者：会 HTML/CSS/JS，刚学完 TypeScript 与 Node 基础，没写过前端框架的学员。阅读前提：知道 `npm` 怎么用、什么是 ESM、什么是组件化。
+description: 学习编写前端框架，要求会 HTML/CSS/JS，有 TypeScript 与 Node 基础。
 date: 2026-11-01
 category: 技术
 tags:
   - AIGC
   - 技术
   - 笔记
+readingTime: 61
 ---
 
-## 目录
+版本基线：2026 年 10 月，Astro 7.x（Rust 编译器 + Sätteri Markdown + Vite 8/Rolldown）。
 
-- [0. Astro 是什么](#0-astro-是什么)
-- [1. 创建第一个项目](#1-创建第一个项目)
-- [2. `.astro` 组件语法](#2-astro-组件语法)
-- [3. 页面与布局](#3-页面与布局)
-- [4. 路由](#4-路由)
-- [5. 数据获取](#5-数据获取)
-- [6. 内容集合（Content Collections）](#6-内容集合content-collections)
-- [7. Markdown 与 MDX](#7-markdown-与-mdx)
-- [标题](#标题)
-- [8. 样式](#8-样式)
-- [9. 图片与静态资源](#9-图片与静态资源)
-- [10. 岛屿：在 Astro 里用 React / Vue / Svelte](#10-岛屿在-astro-里用-react-vue-svelte)
-- [11. 动态渲染（SSR）与服务端能力](#11-动态渲染ssr与服务端能力)
-- [12. 环境变量与配置](#12-环境变量与配置)
-- [13. SEO、RSS、站点地图与可访问性](#13-seorss站点地图与可访问性)
-- [14. 国际化（i18n）](#14-国际化i18n)
-- [15. 构建与部署](#15-构建与部署)
-- [16. 调试与常见错误](#16-调试与常见错误)
-- [17. 实战：一个可部署的博客](#17-实战一个可部署的博客)
-- [18. 从 HTML 迁移 / 与其他框架对比](#18-从-html-迁移-与其他框架对比)
-- [19. 练习](#19-练习)
-- [20. 速查表](#20-速查表)
-- [21. 学习路径与资源](#21-学习路径与资源)
+适用读者：会 HTML/CSS/JS，刚学完 TypeScript 与 Node 基础，没写过前端框架的学员。
 
----
+阅读前提：知道 `npm` 怎么用、什么是 ESM、什么是组件化。
 
 ## 0. Astro 是什么
 
