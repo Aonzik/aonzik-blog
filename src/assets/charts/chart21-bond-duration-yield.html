@@ -1,0 +1,91 @@
+<div class="ch-header">
+  <p class="ch-title">债券核心物理学：到期收益率(YTM)与久期(Duration)的利率跷跷板</p>
+  <p class="ch-lede">债券价格与市场利率呈绝对反向变动。久期就是杠杆倍数：久期越长，对利率波动越敏感。掌握「降息拉长久期、加息缩短久期」的实战法则。</p>
+</div>
+<div class="ch-grid-2">
+  <div class="ch-card">
+    <div class="ch-card-title">① 票面利率 vs 到期收益率（YTM）本质对比</div>
+    <div class="ch-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>对比指标</th>
+            <th>票面利率 (Coupon Rate)</th>
+            <th>到期收益率 (YTM, Yield to Maturity)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>决定因素</strong></td>
+            <td>发债时合同写死的票面利息与面值</td>
+            <td>你在二级市场买入的实际价格 + 持有到期的全部利息与本金折现</td>
+          </tr>
+          <tr>
+            <td><strong>数值特征</strong></td>
+            <td>固定不变（如 100 元面值，每年 3 元利息，票面利率恒为 3%）</td>
+            <td>随市场交易价格每日剧烈浮动（折价买入时 YTM 飙升，溢价买入时 YTM 缩水）</td>
+          </tr>
+          <tr>
+            <td><strong>实战案例</strong></td>
+            <td>面值 100 元，年息 3 元，买入价 100 元 $\rightarrow$ 回报率 3%</td>
+            <td>若市场恐慌抛售，你在二级市场以 <strong>80 元折价抄底</strong>买入：不仅每年拿 3 元利息，到期还能拿回 100 元本金，实际到期收益率高达 <strong>11% 以上</strong>！</td>
+          </tr>
+          <tr>
+            <td><strong>隐含假设</strong></td>
+            <td>无任何假设</td>
+            <td>假设期间收到的所有利息均能以相同的 YTM 成功再投资（无再投资风险）</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="ch-micro">💡 避坑提示：买债券绝不能只看票面利率！如果以 115 元高溢价买入票面 3% 的债券，到期按 100 元兑付，扣除本金缩水后实际到期收益率极低甚至为负。</p>
+  </div>
+
+  <div class="ch-card">
+    <div class="ch-card-title">② 久期（Duration）与利率变动杠杆测算表</div>
+    <div class="ch-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>债券品种类别</th>
+            <th>典型组合久期</th>
+            <th>市场利率下降 1% (降息周期)</th>
+            <th>市场利率上升 1% (加息周期)</th>
+            <th>实战资产配置建议</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>货币基金 / 超短债</strong></td>
+            <td>约 0.2 ~ 0.5 年</td>
+            <td>价格微涨约 +0.3%</td>
+            <td>价格微跌约 -0.3%</td>
+            <td>几乎不受利率变动影响，适合活钱避险</td>
+          </tr>
+          <tr>
+            <td><strong>中短期纯债基金</strong></td>
+            <td>约 1.5 ~ 3.0 年</td>
+            <td>价格上涨约 <strong>+2.5%</strong></td>
+            <td>价格下跌约 <strong>-2.5%</strong></td>
+            <td>波动温和，能平滑穿越正常经济周期</td>
+          </tr>
+          <tr>
+            <td><strong>长久期国债 (10年期)</strong></td>
+            <td>约 7.5 ~ 8.5 年</td>
+            <td>价格大涨约 <strong>+8.0%</strong></td>
+            <td>价格大跌约 <strong>-8.0%</strong></td>
+            <td>加息周期有深度回撤风险；降息期获利丰厚</td>
+          </tr>
+          <tr>
+            <td><strong>超长期国债 (30年期)</strong></td>
+            <td>约 18 ~ 22 年</td>
+            <td>价格暴涨高达 <strong>+20%！</strong></td>
+            <td>价格暴跌高达 <strong>-20%！</strong></td>
+            <td>波动堪比股票，严禁当成保本理财盲目买入</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="ch-micro">债券价格变动近似公式：$\Delta P / P \approx - \text{Duration} \times \Delta y$。负号意味着反向运动：预判降息时「拉长久期多买长债」，预判加息时「缩短久期减持长债」。</p>
+  </div>
+</div>

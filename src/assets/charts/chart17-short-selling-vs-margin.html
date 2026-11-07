@@ -1,0 +1,91 @@
+<div class="ch-header">
+  <p class="ch-title">做多 vs 做空：机制对决与致命的风险不对称性</p>
+  <p class="ch-lede">做多是「先买后卖」，最大亏损不过本金归零；做空是「借券先卖后买」，一旦逆向暴涨，理论亏损上不封顶，且极易遭遇轧空爆仓。</p>
+</div>
+<div class="ch-grid-2">
+  <div class="ch-card">
+    <div class="ch-card-title">① 做多（Long）与做空（Short）关键机制对比</div>
+    <div class="ch-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>对比维度</th>
+            <th>普通做多（买入看涨）</th>
+            <th>融券做空（借券看跌）</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>操作顺序</strong></td>
+            <td>低价买入现券 → 等待上涨 → 高价卖出</td>
+            <td>向券商借券高价卖出 → 等待下跌 → 低价买券还回</td>
+          </tr>
+          <tr>
+            <td><strong>最大潜在盈利</strong></td>
+            <td><strong>理论无上限</strong>（股价可翻数倍甚至数十倍）</td>
+            <td><strong>严格锁定在 100%</strong>（标的即便跌到 0 元破产）</td>
+          </tr>
+          <tr>
+            <td><strong>最大潜在亏损</strong></td>
+            <td><strong>严格限制在 100%</strong>（最多跌到 0 元本金亏尽）</td>
+            <td><strong>理论完全无上限！</strong>（股价涨 5 倍亏 400%，涨 10 倍亏 900%）</td>
+          </tr>
+          <tr>
+            <td><strong>时间与成本</strong></td>
+            <td>无强制借券利息，可耐心长期守候</td>
+            <td>每日计提借券高昂利息，时间站在空头的对立面</td>
+          </tr>
+          <tr>
+            <td><strong>极端风险</strong></td>
+            <td>阴跌钝刀子割肉</td>
+            <td><strong>轧空（Short Squeeze）</strong>与强制平仓穿仓倒欠巨债</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="ch-micro">💡 风险不对称铁律：做多哪怕看错 100 次，每次最多亏完投入的钱；做空只要看错 1 次遇到狂飙妖股，就可能导致终身负债！</p>
+  </div>
+
+  <div class="ch-card">
+    <div class="ch-card-title">② 信用交易维持担保比例与强制平仓（爆仓）线</div>
+    <div class="ch-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>预警梯队</th>
+            <th>维持担保比例</th>
+            <th>账户状态</th>
+            <th>券商风控动作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="ch-badge ch-badge-safe">安全运营区</span></td>
+            <td><strong>&gt; 150%</strong></td>
+            <td>健康运作</td>
+            <td>允许提取超出部分的现金或自由交易</td>
+          </tr>
+          <tr>
+            <td><span class="ch-badge ch-badge-mid">警戒补仓区</span></td>
+            <td><strong>130% ~ 140%</strong></td>
+            <td>触发警戒线</td>
+            <td>禁止继续加仓借钱，券商发送追保短信催款</td>
+          </tr>
+          <tr>
+            <td><span class="ch-badge ch-badge-high">紧急追保区</span></td>
+            <td><strong>&lt; 130%</strong></td>
+            <td>触及平仓线</td>
+            <td>必须在 1 个交易日内追加现金或有效抵押物</td>
+          </tr>
+          <tr>
+            <td><span class="ch-badge ch-badge-danger">强制平仓 (爆仓)</span></td>
+            <td><strong>未能按时补足</strong></td>
+            <td>失去控制权</td>
+            <td><strong>券商在次日开盘不计代价市价强平抛售</strong>全部持仓股票</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="ch-micro">公式：维持担保比例 =（现金 + 担保证券市值）÷（融资买入金额 + 融券卖出量 × 现价 + 利息费用）。若跌停卖不出去导致资产小于负债，将发生「穿仓」，券商将依法通过法院追讨倒欠本息。</p>
+  </div>
+</div>
