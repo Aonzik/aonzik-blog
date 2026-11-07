@@ -9,41 +9,41 @@
       <table>
         <thead>
           <tr>
-            <th>对比维度</th>
-            <th>普通做多（买入看涨）</th>
-            <th>融券做空（借券看跌）</th>
+            <th class="ch-nowrap">对比维度</th>
+            <th>普通做多<br><small>买入看涨</small></th>
+            <th>融券做空<br><small>借券看跌</small></th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td><strong>操作顺序</strong></td>
+            <td class="ch-nowrap"><strong>操作顺序</strong></td>
             <td>低价买入现券 → 等待上涨 → 高价卖出</td>
             <td>向券商借券高价卖出 → 等待下跌 → 低价买券还回</td>
           </tr>
           <tr>
-            <td><strong>最大潜在盈利</strong></td>
-            <td><strong>理论无上限</strong>（股价可翻数倍甚至数十倍）</td>
+            <td class="ch-nowrap"><strong>最大潜在盈利</strong></td>
+            <td><strong class="ch-good">理论无上限</strong>（股价可翻数倍甚至数十倍）</td>
             <td><strong>严格锁定在 100%</strong>（标的即便跌到 0 元破产）</td>
           </tr>
           <tr>
-            <td><strong>最大潜在亏损</strong></td>
+            <td class="ch-nowrap"><strong>最大潜在亏损</strong></td>
             <td><strong>严格限制在 100%</strong>（最多跌到 0 元本金亏尽）</td>
-            <td><strong>理论完全无上限！</strong>（股价涨 5 倍亏 400%，涨 10 倍亏 900%）</td>
+            <td><strong class="ch-em">理论完全无上限！</strong>（股价涨 5 倍亏 400%，涨 10 倍亏 900%）</td>
           </tr>
           <tr>
-            <td><strong>时间与成本</strong></td>
+            <td class="ch-nowrap"><strong>时间与成本</strong></td>
             <td>无强制借券利息，可耐心长期守候</td>
             <td>每日计提借券高昂利息，时间站在空头的对立面</td>
           </tr>
           <tr>
-            <td><strong>极端风险</strong></td>
+            <td class="ch-nowrap"><strong>极端风险</strong></td>
             <td>阴跌钝刀子割肉</td>
-            <td><strong>轧空（Short Squeeze）</strong>与强制平仓穿仓倒欠巨债</td>
+            <td><strong class="ch-em">轧空（Short Squeeze）</strong>与强制平仓穿仓倒欠巨债</td>
           </tr>
         </tbody>
       </table>
     </div>
-    <p class="ch-micro">💡 风险不对称铁律：做多哪怕看错 100 次，每次最多亏完投入的钱；做空只要看错 1 次遇到狂飙妖股，就可能导致终身负债！</p>
+    <p class="ch-micro">风险不对称铁律：做多哪怕看错 100 次，每次最多亏完投入的钱；做空只要看错 1 次遇到狂飙妖股，就可能导致终身负债！</p>
   </div>
 
   <div class="ch-card">
@@ -52,35 +52,35 @@
       <table>
         <thead>
           <tr>
-            <th>预警梯队</th>
-            <th>维持担保比例</th>
-            <th>账户状态</th>
+            <th class="ch-nowrap">预警梯队</th>
+            <th class="ch-nowrap">维持担保比例</th>
+            <th class="ch-nowrap">账户状态</th>
             <th>券商风控动作</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td><span class="ch-badge ch-badge-safe">安全运营区</span></td>
-            <td><strong>&gt; 150%</strong></td>
-            <td>健康运作</td>
+            <td class="ch-nowrap"><span class="ch-badge ch-badge-safe">安全运营区</span></td>
+            <td class="ch-nowrap"><strong>&gt; 150%</strong></td>
+            <td class="ch-nowrap">健康运作</td>
             <td>允许提取超出部分的现金或自由交易</td>
           </tr>
           <tr>
-            <td><span class="ch-badge ch-badge-mid">警戒补仓区</span></td>
-            <td><strong>130% ~ 140%</strong></td>
-            <td>触发警戒线</td>
+            <td class="ch-nowrap"><span class="ch-badge ch-badge-mid">警戒补仓区</span></td>
+            <td class="ch-nowrap"><strong class="ch-hl">130% ~ 140%</strong></td>
+            <td class="ch-nowrap">触发警戒线</td>
             <td>禁止继续加仓借钱，券商发送追保短信催款</td>
           </tr>
           <tr>
-            <td><span class="ch-badge ch-badge-high">紧急追保区</span></td>
-            <td><strong>&lt; 130%</strong></td>
-            <td>触及平仓线</td>
+            <td class="ch-nowrap"><span class="ch-badge ch-badge-high">紧急追保区</span></td>
+            <td class="ch-nowrap"><strong class="ch-em">&lt; 130%</strong></td>
+            <td class="ch-nowrap"><span class="ch-em">触及平仓线</span></td>
             <td>必须在 1 个交易日内追加现金或有效抵押物</td>
           </tr>
           <tr>
-            <td><span class="ch-badge ch-badge-danger">强制平仓 (爆仓)</span></td>
-            <td><strong>未能按时补足</strong></td>
-            <td>失去控制权</td>
+            <td class="ch-nowrap"><span class="ch-badge ch-badge-danger">强制平仓 (爆仓)</span></td>
+            <td class="ch-nowrap"><strong class="ch-em">未能按时补足</strong></td>
+            <td class="ch-nowrap"><strong class="ch-em">失去控制权</strong></td>
             <td><strong>券商在次日开盘不计代价市价强平抛售</strong>全部持仓股票</td>
           </tr>
         </tbody>

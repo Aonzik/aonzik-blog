@@ -230,6 +230,10 @@
       只把内边距收紧到密排档，并允许窄屏内部横向滚动。
    -------------------------------------------------------------------------- */
 
+/* 片段里的公式由 render-math-in-html.mjs 在构建期编译成 KaTeX，与正文公式同一套输出 */
+.chart-embed .katex {
+  font-size: 1.05em;
+}
 .ch-scroll {
   overflow-x: auto;
   /* 滚动条出现时不切断首末列的边框 */
@@ -261,6 +265,24 @@
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--ink-faint);
+  /* 表头允许折行：中文表头一旦 nowrap，会把正文列挤到 100px 出头，
+     整张表变成 4~5 行的窄条（见 chart22 ②）。需要单行的表头自己加 .ch-nowrap。 */
+  white-space: normal;
+  text-wrap: balance;
+}
+
+.chart-embed th small {
+  display: block;
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: normal;
+  text-transform: none;
+  color: var(--ink-faint);
+}
+
+.ch-nowrap,
+.chart-embed td.ch-nowrap,
+.chart-embed th.ch-nowrap {
   white-space: nowrap;
 }
 
@@ -275,6 +297,54 @@
 .chart-embed td strong {
   color: var(--ink);
   font-weight: 600;
+}
+
+/* 表格式条目：四列里塞三段中文时，652px 的正文栏会把每格压成 5~6 行窄条
+   （chart19 ② / chart22 ② 实测行高 104px、96px）。改成「标题 + 标注段落」的竖排，
+   信息一条不少，宽屏窄屏都读得顺。 */
+.ch-facts {
+  display: grid;
+  gap: var(--sp-3);
+  margin: var(--sp-3) 0 var(--sp-2);
+}
+
+.ch-fact {
+  padding: var(--sp-3) var(--sp-4);
+  border: 1px solid var(--rule);
+  background: var(--paper);
+}
+
+.ch-fact-title {
+  margin: 0 0 var(--sp-2);
+  font-family: var(--font-serif);
+  font-size: var(--fs-base);
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--ink);
+}
+
+.ch-fact-line {
+  margin: 0;
+  font-size: var(--fs-sm);
+  line-height: 1.72;
+  color: var(--ink-soft);
+}
+
+.ch-fact-line + .ch-fact-line {
+  margin-top: var(--sp-1);
+}
+
+.ch-fact-label {
+  display: inline-block;
+  min-width: 2.5em;
+  margin-right: var(--sp-1);
+  font-size: var(--fs-xs);
+  letter-spacing: 0.08em;
+  color: var(--ink-faint);
+}
+
+[data-theme='dark'] .ch-fact {
+  background: color-mix(in srgb, var(--ink) 4%, var(--paper-sunken));
 }
 
 /* --------------------------------------------------------------------------

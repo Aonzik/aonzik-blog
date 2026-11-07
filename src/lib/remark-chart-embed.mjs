@@ -27,6 +27,8 @@ import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import { renderMathInHtml } from './render-math-in-html.mjs';
+
 const CHART_DIR = join(dirname(fileURLToPath(import.meta.url)), '..', 'assets', 'charts');
 
 /** 同一张图在一个站点里只用一次磁盘读取。 */
@@ -60,7 +62,9 @@ function escapeAttr(value) {
 const PLACEHOLDER = /<figure\s+data-chart="([\w-]+)"(?:\s+data-caption="([^"]*)")?\s*>\s*<\/figure>/;
 
 function render(id, caption) {
-  const body = loadChart(id);
+  // 片段是原始 HTML 字符串，remark-math / rehype-katex 看不到里面的 $…$，
+  // 所以在这里先把片段内的公式编译成 KaTeX 输出。
+  const body = renderMathInHtml(loadChart(id));
   const figcaption = caption ? `\n<figcaption>${escapeAttr(caption)}</figcaption>` : '';
 
   return (
