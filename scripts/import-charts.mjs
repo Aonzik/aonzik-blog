@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env node
+#!/usr/bin/env node
 /**
  * 把 docs/assets 里的 6 张「深色仪表盘」图表 HTML 导入为本站的图表片段。
  *
@@ -14,20 +14,35 @@
  *     由 charts.css 映射到 tokens，暗色模式自动跟随；
  *   - 表格包一层 .ch-scroll，窄屏内部横向滚动而不是撑破正文栏。
  *
- * 用法：node scripts/import-charts.mjs [--src <docs/assets 目录>]
+ * 用法：node scripts/import-charts.mjs [--src <源目录>] [--prefix <命名空间>]
+ *   --src     默认 docs/assets；相对路径按仓库根解析
+ *   --prefix  产物文件名前缀，默认 stock（本篇用 stock-，以后新文章可用 econ-/macro- …）；
+ *             源文件名已经带同一前缀时不会重复添加
  */
 import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
-import { dirname, join } from 'node:path';
+import { dirname, isAbsolute, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const root = join(here, '..');
-const srcArg = process.argv.indexOf('--src');
-const SRC =
-  srcArg > -1
-    ? process.argv[srcArg + 1]
-    : 'C:/Users/川崎敬/Documents/deepseek-harness/default-workspace/docs/assets';
+
+const argOf = (flag) => {
+  const i = process.argv.indexOf(flag);
+  return i > -1 ? process.argv[i + 1] : undefined;
+};
+
+const RAW_SRC = argOf('--src') ?? 'C:/Users/川崎敬/Documents/deepseek-harness/default-workspace/docs/assets';
+const SRC = isAbsolute(RAW_SRC) ? RAW_SRC : join(root, RAW_SRC);
 const OUT = join(root, 'src/assets/charts');
+
+/**
+ * 产物文件名的命名空间前缀。默认 stock-（本篇《股票投资入门手册》）；
+ * 新文章互不干扰：`--prefix econ` ⇒ econ-chartN-xxx.html，正文写 data-chart="econ-chartN-xxx"。
+ * 注意它只管「文件身份」，样式仍是全局共用的 src/styles/charts.css。
+ */
+const PREFIX = (argOf('--prefix') ?? 'stock').replace(/^-+|-+$/g, '') || 'stock';
+const OUT_PREFIX = `${PREFIX}-`;
+const outNameOf = (name) => (name.startsWith(OUT_PREFIX) ? name : `${OUT_PREFIX}${name}`);
 
 /** 每张图的内联样式 → 语义类。按整串匹配，命中即抛错，宁可失配也不静默放过。 */
 const INLINE = {
@@ -227,6 +242,8 @@ function transform(name, body) {
 }
 
 mkdirSync(OUT, { recursive: true });
+console.log(`[import-charts] 源 ${SRC}`);
+console.log(`[import-charts] 命名空间前缀 ${OUT_PREFIX}（可用 --prefix 改）`);
 
 for (const name of FILES) {
   const raw = readFileSync(join(SRC, `${name}.html`), 'utf8');
@@ -250,18 +267,23 @@ for (const name of FILES) {
     if (open !== close) throw new Error(`${name}: <${tag}> 数量不配对 ${open}/${close}`);
   }
 
-  writeFileSync(join(OUT, `${name}.html`), out, 'utf8');
-  console.log(`${name}.html  ${Buffer.byteLength(out)} B`);
+  const outName = outNameOf(name);
+  writeFileSync(join(OUT, `${outName}.html`), out, 'utf8');
+  console.log(`${outName}.html  ${Buffer.byteLength(out)} B`);
 }
 
 /*
  * 图表片段是在「构建期」被 src/lib/remark-chart-embed.mjs 内联进文章的，而 Astro 的
- * content layer 会把每篇 md 的渲染结果缓存进 node_modules/.astro/data-store.json，
+ * content layer 会把每篇 md 的渲染结果缓存进 `.astro/data-store.json`，
  * 键是 md 自身的内容摘要。只改片段、不改 md 时摘要不变 ⇒ 构建直接复用旧渲染结果，
- * 看着像「改了没生效」（实测踩过一次）。这里顺手清掉缓存，让下一次构建读到新片段。
+ * 看着像「改了没生效」（实测踩过两次）。这里顺手清掉缓存，让下一次构建读到新片段。
+ *
+ * 两个位置都清：Astro 7 的 content layer store 在仓库根 `.astro/`，
+ * 而 `node_modules/.astro/` 只是生成的类型文件，老版本曾把 store 放在那里。
  */
-const DATA_STORE = join(root, 'node_modules/.astro/data-store.json');
-if (existsSync(DATA_STORE)) {
-  rmSync(DATA_STORE);
-  console.log('已清除 node_modules/.astro/data-store.json（文章渲染缓存）');
+const DATA_STORES = [join(root, '.astro/data-store.json'), join(root, 'node_modules/.astro/data-store.json')];
+for (const store of DATA_STORES) {
+  if (!existsSync(store)) continue;
+  rmSync(store);
+  console.log(`已清除 ${store.replace(`${root}\\`, '').replace(`${root}/`, '')}（文章渲染缓存）`);
 }

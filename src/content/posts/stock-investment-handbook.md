@@ -38,7 +38,7 @@ tags:
 - 10 年后，其实际购买力仅相当于今天的约 **7.37 万元**；
 - 20 年后，其实际购买力仅剩约 **5.43 万元**。
 
-<figure data-chart="chart12-inflation-erosion" data-caption="图 1 · 10 万元在 3% 通胀下的购买力衰减"></figure>
+<figure data-chart="stock-chart12-inflation-erosion" data-caption="图 1 · 10 万元在 3% 通胀下的购买力衰减"></figure>
 
 > **通胀的本质**：社会中的货币总量（M2）增长速度快于全社会商品与服务的总产出，导致单位货币所能换取的实体物品减少。如果你的资产收益率低于真实通胀率，你表面上的名义数字虽然没有减少，但你的**实质财富每天都在蒸发**。
 
@@ -107,7 +107,7 @@ $$\text{本金翻倍年限} \approx \frac{72}{\text{年化收益率 (\%) }}$$
 
 一次-50%的致命踩雷，足以抹杀你过去5年辛辛苦苦积累的全部复合收益。因此，**控制下行风险永远优先于追逐上行空间**。
 
-<figure data-chart="chart7-compound-72rule" data-caption="图 2 · 复利的两个方向：翻倍年限与亏损回本（对数刻度）"></figure>
+<figure data-chart="stock-chart7-compound-72rule" data-caption="图 2 · 复利的两个方向：翻倍年限与亏损回本（对数刻度）"></figure>
 
 ---
 
@@ -147,7 +147,7 @@ $$\text{本金翻倍年限} \approx \frac{72}{\text{年化收益率 (\%) }}$$
    - **存放品种**：宽基指数基金/ETF、高股息红利资产、优质行业龙头个股。
    - **心态**：由于期限长达数年，即使遇到股市暂时大跌30%，你也不会被迫割肉，能够从容穿越熊市周期，静待牛市收获超额回报。
 
-<figure data-chart="chart1-asset-spectrum" data-caption="图 3 · 全谱系金融资产「收益-风险-流动性」全景图谱"></figure>
+<figure data-chart="stock-chart1-asset-spectrum" data-caption="图 3 · 全谱系金融资产「收益-风险-流动性」全景图谱"></figure>
 
 ---
 
@@ -183,7 +183,7 @@ $$\text{本金翻倍年限} \approx \frac{72}{\text{年化收益率 (\%) }}$$
 (国债/存单)     (纯债/高评级信用) (混合股债)    (权益/大宗股票)   (衍生品/杠杆)
 ```
 
-<figure data-chart="chart8-risk-ladder" data-caption="图 4 · 银行理财 R1–R5 风险阶梯与典型底层资产"></figure>
+<figure data-chart="stock-chart8-risk-ladder" data-caption="图 4 · 银行理财 R1–R5 风险阶梯与典型底层资产"></figure>
 
 - **R1 级（谨慎型）**：基本投资于银行存款、国债等无风险资产，极少亏损，接近保本；
 - **R2 级（稳健型）**：绝大多数银行理财属于此类（“固收+”），80%以上投资于优质债券，小幅配置存款。在极端债市回调时（如2022年末），可能出现短期数周的微幅浮亏，但拉长半年以上基本能稳健收正；
@@ -225,7 +225,7 @@ $$\frac{\Delta P}{P} \approx - \text{Duration} \times \Delta y$$
   - **预判宏观利率将下行（央行降息周期）** $\rightarrow$ **果断拉长久期**（多买长期纯债基金或长久期国债），不仅锁定高利息，更能赚取极为丰厚的资本利得暴涨；
   - **预判宏观利率见底将回升（加息与通胀周期）** $\rightarrow$ **坚决缩短久期**（换成货币基金或超短债基金），防范长债价格大跌踩雷。
 
-<figure data-chart="chart21-bond-duration-yield" data-caption="图 5 · 债券核心物理学：到期收益率(YTM)与久期(Duration)的利率跷跷板"></figure>
+<figure data-chart="stock-chart21-bond-duration-yield" data-caption="图 5 · 债券核心物理学：到期收益率(YTM)与久期(Duration)的利率跷跷板"></figure>
 
 #### 4. 三种国债渠道流动性与机制对比
 
@@ -279,7 +279,7 @@ $$\frac{\Delta P}{P} \approx - \text{Duration} \times \Delta y$$
   • 统计显示：10年维度上超85%主动基金跑输指数   • 永续不倒，长期完整跟随国运与大盘成长
 ```
 
-<figure data-chart="chart13-fund-family" data-caption="图 6 · 基金谱系：主动 vs 被动，与各类型基金的权益仓位区间"></figure>
+<figure data-chart="stock-chart13-fund-family" data-caption="图 6 · 基金谱系：主动 vs 被动，与各类型基金的权益仓位区间"></figure>
 
 #### 2.4.5 散户首选神器：ETF 的一二级双层机制、折溢价率与小资金优势
 **ETF（Exchange Traded Fund，交易型开放式指数基金）**是现代金融学为普通投资者量身定制的顶级工具。
@@ -293,7 +293,7 @@ $$\frac{\Delta P}{P} \approx - \text{Duration} \times \Delta y$$
 - **场外基金的“现金流拖累（Cash Drag）”致命伤**：
   相反，普通的场外基金（如支付宝上买的基金），基民每申购一笔，基金经理就必须拿现金去市场追买股票；基民每赎回一笔，基金经理就必须割肉卖出股票换现还给基民。基金公司不仅必须保留 5%~10% 的闲置现金应付不可预期的赎回（无法满仓享受牛市涨幅），而且零散交易产生巨大的滑点与经手成本。而 ETF 彻底摆脱了这些现金流杂务，实现了**零现金拖累和极致的超低费率**。
 
-<figure data-chart="chart22-etf-ap-mechanism" data-caption="图 7 · ETF 双层架构微观机制：AP 实物申赎、低费率与跨境高溢价真相"></figure>
+<figure data-chart="stock-chart22-etf-ap-mechanism" data-caption="图 7 · ETF 双层架构微观机制：AP 实物申赎、低费率与跨境高溢价真相"></figure>
 
 ##### 2. ETF 折溢价率（Discount/Premium）与跨境纳指 ETF 高溢价谜底
 - **折溢价的产生**：二级市场的 ETF 价格是撮合成交的，必然受到散户情绪与资金供需影响。市价大于基金实际净值（IOPV）称为**溢价**，市价小于净值称为**折价**；
@@ -346,7 +346,7 @@ $$\frac{\Delta P}{P} \approx - \text{Duration} \times \Delta y$$
   - **USD/JPY（美元兑日元）**：表示 1 美元可以兑换多少日元。
 - **汇率涨跌机制**：取决于两国的利差（如美联储与欧洲央行的加息降息周期）、通胀差异（购买力平价）、贸易顺差逆差以及地缘政治风险。
 
-<figure data-chart="chart19-forex-leverage-trap" data-caption="图 8 · 炒外汇高杠杆下的致命爆仓推演与地下对赌黑盘陷阱"></figure>
+<figure data-chart="stock-chart19-forex-leverage-trap" data-caption="图 8 · 炒外汇高杠杆下的致命爆仓推演与地下对赌黑盘陷阱"></figure>
 
 #### 2. 为什么普通素人「炒外汇」极易血本无归？四大致命真相
 
@@ -377,7 +377,7 @@ $$\frac{\Delta P}{P} \approx - \text{Duration} \times \Delta y$$
 
 为了让零基础小白彻底看透公司如何上市、股价从何而来，我们通过一个虚构的企业——**“老王牛肉面馆”**的成长推演来进行全景解剖：
 
-<figure data-chart="chart2-company-to-stock" data-caption="图 9 · 从生意的本质到上市公司推演全景"></figure>
+<figure data-chart="stock-chart2-company-to-stock" data-caption="图 9 · 从生意的本质到上市公司推演全景"></figure>
 
 #### 阶段一：小作坊与独资经营
 老王手艺好，自己掏出积蓄 **10 万元** 开了一家街边牛肉面馆。
@@ -421,7 +421,7 @@ $$\frac{\Delta P}{P} \approx - \text{Duration} \times \Delta y$$
 
 很多人以为股市就像菜市场，买卖双方当面讨价还价。现代证券交易所的底层，是一套精密高效的**计算机撮合引擎（Matching Engine）**。
 
-<figure data-chart="chart20-market-ecosystem-matching" data-caption="图 10 · 证券市场运行全景图：撮合引擎、做市模式与多方生态博弈"></figure>
+<figure data-chart="stock-chart20-market-ecosystem-matching" data-caption="图 10 · 证券市场运行全景图：撮合引擎、做市模式与多方生态博弈"></figure>
 
 #### 1. 现代交易所的两大组织模式：竞价驱动 vs 做市商
 - **竞价驱动模式（Order-driven Market）—— A 股主板与港股主流**
@@ -517,7 +517,7 @@ $$\frac{\Delta P}{P} \approx - \text{Duration} \times \Delta y$$
 - **13:00 - 14:57**：后市连续竞价交易。
 - **14:57 - 15:00**：收盘集合竞价（**不可撤单**），最终撮合锁定当日**官方收盘价**。
 
-<figure data-chart="chart9-trading-session" data-caption="图 11 · A 股一个交易日的六个时段与竞价撤单规则"></figure>
+<figure data-chart="stock-chart9-trading-session" data-caption="图 11 · A 股一个交易日的六个时段与竞价撤单规则"></figure>
 
 ---
 
@@ -525,7 +525,7 @@ $$\frac{\Delta P}{P} \approx - \text{Duration} \times \Delta y$$
 
 在剧烈波动的市场中，交易所通过“限价”与“熔断”给市场套上刹车片。然而，理解刹车机制背后的**流动性冻结**，是新手避险的核心基本功。
 
-<figure data-chart="chart18-circuit-breaker-limit" data-caption="图 12 · 涨跌停板封板流动性与熔断机制对比"></figure>
+<figure data-chart="stock-chart18-circuit-breaker-limit" data-caption="图 12 · 涨跌停板封板流动性与熔断机制对比"></figure>
 
 #### 1. 涨跌停板微观盘口机制（Price Limits）
 - **什么是“封涨停”？**
@@ -563,7 +563,7 @@ $$\frac{\Delta P}{P} \approx - \text{Duration} \times \Delta y$$
 
 在传统投资理念中，人们只知道“低买高卖”才能赚钱。然而，在成熟金融市场中，**只要有价格波动，无论涨跌都能赚钱——这就是「做空」与「杠杆交易」**。
 
-<figure data-chart="chart17-short-selling-vs-margin" data-caption="图 13 · 做多 vs 做空风险不对称性与融资融券强平爆仓线"></figure>
+<figure data-chart="stock-chart17-short-selling-vs-margin" data-caption="图 13 · 做多 vs 做空风险不对称性与融资融券强平爆仓线"></figure>
 
 #### 1. 做多（Long）vs 做空（Short）机制全推演
 - **做多（买入看涨）**：
@@ -656,7 +656,7 @@ $$\frac{\Delta P}{P} \approx - \text{Duration} \times \Delta y$$
 - 因此次日开盘基准价自动除息下调为：$10.00 - 0.50 = \mathbf{9.50\text{ 元}}$。
 - 此时：你的账户资产为 9.5 元股票市值 + 0.5 元现金 = 10 元，总资产完全不变。
 
-<figure data-chart="chart14-exdividend" data-caption="图 14 · 除权除息守恒与红利税"></figure>
+<figure data-chart="stock-chart14-exdividend" data-caption="图 14 · 除权除息守恒与红利税"></figure>
 
 > **红利税（股息红利差别化个人所得税）**：只看「买入到卖出」的实际持有期，分 0% / 10% / 20% 三档（见图 14 的第三块）。国家通过税率杠杆，明确鼓励长期价值投资，惩罚短期频繁炒作投机。
 
@@ -672,7 +672,7 @@ K线源于18世纪日本堂岛米市（称为蜡烛图），它用极其简洁�
 3. **最低价（Low）**
 4. **收盘价（Close）**
 
-<figure data-chart="chart3-kline-anatomy" data-caption="图 15 · K 线结构解剖与盘口五档实战图"></figure>
+<figure data-chart="stock-chart3-kline-anatomy" data-caption="图 15 · K 线结构解剖与盘口五档实战图"></figure>
 
 #### 阳线（Bullish Candle，A股为红色）
 - **定义**：收盘价高于开盘价（股价全天上涨）；
@@ -718,7 +718,7 @@ K线源于18世纪日本堂岛米市（称为蜡烛图），它用极其简洁�
 > - **黄金交叉（金叉）**：短周期均线从下方**向上穿过**长周期均线（如MA5上穿MA20），通常被视为买入或企稳信号；
 > - **死亡交叉（死叉）**：短周期均线从上方**向下穿破**长周期均线（如MA5下穿MA20），通常被视为离场或走弱信号。
 
-<figure data-chart="chart10-moving-averages" data-caption="图 16 · 价格、MA5 与 MA20 的缠绕：金叉与死叉（演示数据）"></figure>
+<figure data-chart="stock-chart10-moving-averages" data-caption="图 16 · 价格、MA5 与 MA20 的缠绕：金叉与死叉（演示数据）"></figure>
 
 ---
 
@@ -825,7 +825,7 @@ $$\text{换手率} = \frac{\text{当日累计成交股数}}{\text{流通总股�
 
 财务报表是上市公司的“健康体检报告”。你不需要考注册会计师，只要抓住核心脉络，就能避开80%以上的财务造假和垃圾公司：
 
-<figure data-chart="chart4-financials-valuation" data-caption="图 17 · 财务三张表与核心估值指标图解"></figure>
+<figure data-chart="stock-chart4-financials-valuation" data-caption="图 17 · 财务三张表与核心估值指标图解"></figure>
 
 #### 1. 资产负债表（Balance Sheet）——“公司的底子 / 存量照”
 - **核心会计恒等式**：
@@ -951,7 +951,7 @@ $$\text{股息率} = \frac{\text{每股现金分红总额}}{\text{当前股票�
    - **特点**：保证即刻成交，不保证最终成交价格。
    - **风险**：在盘面流动性较差、急剧波动的瞬间，市价单可能会沿着卖五档一路往上扫货，导致你的实际成交均价大幅高于你的心理预期（产生滑点亏损）。
 
-<figure data-chart="chart15-market-order-slippage" data-caption="图 18 · 市价单沿五档扫货的滑点"></figure>
+<figure data-chart="stock-chart15-market-order-slippage" data-caption="图 18 · 市价单沿五档扫货的滑点"></figure>
 
 ---
 
@@ -959,7 +959,7 @@ $$\text{股息率} = \frac{\text{每股现金分红总额}}{\text{当前股票�
 
 交易并不是免费的游戏。每一次买进和卖出，你都在向三方缴纳“过路费”：
 
-<figure data-chart="chart5-trading-execution-costs" data-caption="图 19 · 交易实操与摩擦成本防坑指南"></figure>
+<figure data-chart="stock-chart5-trading-execution-costs" data-caption="图 19 · 交易实操与摩擦成本防坑指南"></figure>
 
 #### 1. 交易税费清单（以买卖各 10 万元主板股票测算）
 
@@ -1009,7 +1009,7 @@ $$\text{股息率} = \frac{\text{每股现金分红总额}}{\text{当前股票�
 
 在金融市场中，最终决定你盈亏的，往往不是你的智商或分析水平，而是你的**心理与情绪自控力**。
 
-<figure data-chart="chart6-strategy-psychology" data-caption="图 20 · 投资心理学与科学风控全景图"></figure>
+<figure data-chart="stock-chart6-strategy-psychology" data-caption="图 20 · 投资心理学与科学风控全景图"></figure>
 
 #### 散户经典亏损循环（情绪过山车）：
 1. **犹豫观望**：大盘经过漫长熊市跌入谷底，遍地廉价资产，新闻一片唱衰，散户心存怀疑，一股不敢买；
@@ -1075,7 +1075,7 @@ $$\text{股息率} = \frac{\text{每股现金分红总额}}{\text{当前股票�
 - 每上涨 0.5 元（升至10.5），系统自动执行卖出1手；
 - 不预测未来趋势，机械化地依靠日内上下震荡反复赚取“波段价差”，平摊持仓成本。
 
-<figure data-chart="chart11-grid-pyramid" data-caption="图 21 · 倒金字塔仓位（上）与 10 元箱体的网格挂单（下）"></figure>
+<figure data-chart="stock-chart11-grid-pyramid" data-caption="图 21 · 倒金字塔仓位（上）与 10 元箱体的网格挂单（下）"></figure>
 
 ---
 
@@ -1095,7 +1095,7 @@ $$\text{股息率} = \frac{\text{每股现金分红总额}}{\text{当前股票�
   - 只要股价每天创出新高，你就安心持股不动，让利润自由奔跑；
   - 一旦股价从阶段最高点回踩下跌超过 8%，立刻卖出锁定全部大部分丰厚战果。
 
-<figure data-chart="chart16-trailing-stop" data-caption="图 22 · 移动止盈：跟着最高价抬升的卖出线"></figure>
+<figure data-chart="stock-chart16-trailing-stop" data-caption="图 22 · 移动止盈：跟着最高价抬升的卖出线"></figure>
 
 ---
 
