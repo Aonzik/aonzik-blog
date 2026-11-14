@@ -97,13 +97,17 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? 'https://aonzik.exam
 
   <body>
     <!-- 装饰层：贴视口的固定槽位（四角 / 两侧 rail / 跟随光标 / 气泡角落） -->
-    <Decor slot="page-corner-tl" />
+    <Decor slot="page-corner-tl">
+      <img src="/decor/page-corner-tl.webp" alt="" />
+    </Decor>
     <Decor slot="page-corner-tr" />
     <Decor slot="page-corner-bl" />
     <Decor slot="page-corner-br" />
     <Decor slot="page-rail-left" />
     <Decor slot="page-rail-right" />
-    <Decor slot="cursor-companion" />
+    <Decor slot="cursor-companion">
+      <img src="/decor/cursor-companion.webp" alt="" />
+    </Decor>
     <Decor slot="bubble-corner" />
 
     <slot name="prepend" />
